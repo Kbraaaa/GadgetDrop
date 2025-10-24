@@ -5,10 +5,19 @@ import Navbar from '../components/Navbar';
 export default function Home() {
     const [productos, setProductos] = useState([]);
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        // Intentar cargar productos desde el backend. Si la URL cambia en producción,
+        // puedes usar una variable de entorno (VITE_API_BASE) y concatenar `/api/productos`.
         fetch('http://localhost:5000/api/productos')
-            .then(res => res.json())
+            .then(async res => {
+                if (!res.ok) {
+                    const text = await res.text();
+                    throw new Error(`HTTP ${res.status} - ${text}`);
+                }
+                return res.json();
+            })
             .then(data => {
                 if (Array.isArray(data)) {
                     setProductos(data);
@@ -18,8 +27,9 @@ export default function Home() {
             })
             .catch(err => {
                 console.error('❌ Error al obtener productos:', err);
-                setError('No se pudieron cargar los productos');
-            });
+                setError(err.message || 'No se pudieron cargar los productos');
+            })
+            .finally(() => setLoading(false));
     }, []);
 
     const agregarAlCarrito = async producto => {
@@ -66,6 +76,7 @@ export default function Home() {
                 <h2 className="text-2xl font-bold text-slate-800 mb-6">Productos destacados</h2>
 
                 {error && <p className="text-red-500">{error}</p>}
+                {loading && <p className="text-gray-500">Cargando productos...</p>}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
                     {productos.map(prod => (
@@ -74,8 +85,10 @@ export default function Home() {
                             className="bg-white rounded-2xl shadow-lg p-4 flex flex-col items-center transition transform hover:-translate-y-1 hover:shadow-2xl"
                         >
                             <img
-                                src={prod.imagen.startsWith('http') ? prod.imagen : `${import.meta.env.BASE_URL}${prod.imagen}`}
-                                alt={prod.nombre}
+                                src={(
+                                    prod && prod.imagen && typeof prod.imagen === 'string' && prod.imagen.startsWith && prod.imagen.startsWith('http')
+                                ) ? prod.imagen : 'https://via.placeholder.com/300?text=Sin+imagen'}
+                                alt={prod && prod.nombre ? prod.nombre : 'Producto'}
                                 className="w-full h-40 object-contain mb-3 rounded"
                             />
                             <p className="text-lg font-semibold text-center text-slate-800">{prod.nombre}</p>

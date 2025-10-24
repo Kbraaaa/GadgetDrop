@@ -1,0 +1,6 @@
+node_modules/
+.env
+coverage/
+.DS_Store
+dist/
+frontend-gadgetdrop/node_modules/
