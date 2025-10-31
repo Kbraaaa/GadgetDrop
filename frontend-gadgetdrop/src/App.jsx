@@ -7,6 +7,7 @@ import Success from './pages/Success';
 import Pedidos from './pages/Pedidos';
 import PrivateRoute from './components/PrivateRoute';
 import Registro from './pages/Registro';
+import Admin from './pages/Admin';
 
 
 export default function App() {
@@ -22,6 +23,11 @@ export default function App() {
       <Route path="/pedidos" element={
         <PrivateRoute>
           <Pedidos />
+        </PrivateRoute>
+      } />
+      <Route path="/admin" element={
+        <PrivateRoute>
+          <Admin />
         </PrivateRoute>
       } />
       <Route path="/registro" element={<Registro />} />

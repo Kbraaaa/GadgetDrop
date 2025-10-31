@@ -3,9 +3,8 @@ const DetallePedido = require('../models/DetallePedido');
 const Carrito = require('../models/Carrito');
 const Producto = require('../models/Producto');
 
-// Crear pedido desde el carrito
 const crearPedido = async (req, res) => {
-    const { usuarioId } = req.body;
+    const { usuarioId, externalId } = req.body;
 
     try {
         const carrito = await Carrito.findAll({
@@ -21,8 +20,51 @@ const crearPedido = async (req, res) => {
             return sum + item.cantidad * parseFloat(item.Producto.precio);
         }, 0);
 
+        if (externalId) {
+            const existente = await Pedido.findOne({ where: { externalId } });
+            if (existente) return res.json({ mensaje: 'Pedido ya registrado', pedidoId: existente.id });
+        }
+
+        const normalizeCarrito = items => {
+            return items
+                .map(it => ({ productoId: it.Producto?.id || it.productoId, cantidad: Number(it.cantidad), precioUnitario: Number(it.Producto?.precio ?? it.precioUnitario) }))
+                .sort((a, b) => a.productoId - b.productoId);
+        };
+
+        const carritoNorm = normalizeCarrito(carrito || []);
+        const now = new Date();
+        const WINDOW_SECONDS = 120;
+
+        const recientes = await Pedido.findAll({
+            where: { usuarioId },
+            include: [{ model: DetallePedido }],
+            order: [['createdAt', 'DESC']],
+            limit: 10
+        });
+
+        const isSameDetalles = (car, detalles) => {
+            const detNorm = (detalles || []).map(d => ({ productoId: d.productoId, cantidad: Number(d.cantidad), precioUnitario: Number(d.precioUnitario) })).sort((a, b) => a.productoId - b.productoId);
+            if (car.length !== detNorm.length) return false;
+            for (let i = 0; i < car.length; i++) {
+                if (car[i].productoId !== detNorm[i].productoId) return false;
+                if (Number(car[i].cantidad) !== Number(detNorm[i].cantidad)) return false;
+                if (Math.abs(Number(car[i].precioUnitario) - Number(detNorm[i].precioUnitario)) > 0.01) return false;
+            }
+            return true;
+        };
+
+        for (const ped of recientes) {
+            const ageSeconds = (now - new Date(ped.createdAt)) / 1000;
+            if (ageSeconds <= WINDOW_SECONDS) {
+                if (isSameDetalles(carritoNorm, ped.DetallePedidos)) {
+                    return res.json({ mensaje: 'Pedido ya registrado recientemente', pedidoId: ped.id });
+                }
+            } else break;
+        }
+
         const nuevoPedido = await Pedido.create({
             usuarioId,
+            externalId: externalId || null,
             total,
             pagado: false
         });
@@ -45,17 +87,61 @@ const crearPedido = async (req, res) => {
     }
 };
 
-// Crear pedido luego del pago (desde /success)
 const crearPedidoDesdeStripe = async (req, res) => {
-    const { usuarioId, carrito } = req.body;
+    const { usuarioId, carrito, externalId } = req.body;
 
     try {
+        const normalizeCarrito = items => {
+            return items
+                .map(it => ({ productoId: it.Producto?.id || it.productoId, cantidad: Number(it.cantidad), precioUnitario: Number(it.Producto?.precio ?? it.precioUnitario) }))
+                .sort((a, b) => a.productoId - b.productoId);
+        };
+
+        const carritoNorm = normalizeCarrito(carrito || []);
+        const now = new Date();
+        const WINDOW_SECONDS = 120;
+
+        const recientes = await Pedido.findAll({
+            where: { usuarioId },
+            include: [{ model: DetallePedido }],
+            order: [['createdAt', 'DESC']],
+            limit: 10
+        });
+
+        const isSameDetalles = (car, detalles) => {
+            const detNorm = (detalles || []).map(d => ({ productoId: d.productoId, cantidad: Number(d.cantidad), precioUnitario: Number(d.precioUnitario) })).sort((a, b) => a.productoId - b.productoId);
+            if (car.length !== detNorm.length) return false;
+            for (let i = 0; i < car.length; i++) {
+                if (car[i].productoId !== detNorm[i].productoId) return false;
+                if (Number(car[i].cantidad) !== Number(detNorm[i].cantidad)) return false;
+                // allow small float diffs in price
+                if (Math.abs(Number(car[i].precioUnitario) - Number(detNorm[i].precioUnitario)) > 0.01) return false;
+            }
+            return true;
+        };
+
+        for (const ped of recientes) {
+            const ageSeconds = (now - new Date(ped.createdAt)) / 1000;
+            if (ageSeconds <= WINDOW_SECONDS) {
+                if (isSameDetalles(carritoNorm, ped.DetallePedidos)) {
+                    return res.json({ mensaje: 'Pedido ya registrado recientemente', pedidoId: ped.id });
+                }
+            } else {
+                break;
+            }
+        }
+        if (externalId) {
+            const existente = await Pedido.findOne({ where: { externalId } });
+            if (existente) return res.json({ mensaje: 'Pedido ya registrado', pedidoId: existente.id });
+        }
+
         const total = carrito.reduce((sum, item) => {
             return sum + item.cantidad * parseFloat(item.Producto.precio);
         }, 0);
 
         const nuevoPedido = await Pedido.create({
             usuarioId,
+            externalId: externalId || null,
             total,
             pagado: true
         });
@@ -78,10 +164,12 @@ const crearPedidoDesdeStripe = async (req, res) => {
     }
 };
 
-// Obtener pedidos por usuario
 const obtenerPedidosPorUsuario = async (req, res) => {
     try {
         const { usuarioId } = req.params;
+        if (req.usuario && req.usuario.id && req.usuario.id.toString() !== usuarioId.toString() && req.usuario.rol !== 'admin') {
+            return res.status(403).json({ error: 'Acceso denegado: solo puedes ver tus propios pedidos' });
+        }
 
         const pedidos = await Pedido.findAll({
             where: { usuarioId },

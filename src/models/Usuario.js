@@ -19,6 +19,17 @@ const Usuario = sequelize.define('Usuario', {
         type: DataTypes.ENUM('cliente', 'admin'),
         defaultValue: 'cliente'
     }
+    ,
+    failedLoginAttempts: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0
+    },
+    lockUntil: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        defaultValue: null
+    }
 }, {
     tableName: 'usuarios',
     timestamps: true

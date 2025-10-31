@@ -25,7 +25,7 @@ const crearSesionPago = async (req, res) => {
             payment_method_types: ['card'],
             line_items,
             mode: 'payment',
-            success_url: 'http://localhost:5173/success',
+            success_url: 'http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}',
             cancel_url: 'http://localhost:5173/cart',
             metadata: { usuarioId }
         });

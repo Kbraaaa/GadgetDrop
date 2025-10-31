@@ -1,6 +1,18 @@
-# React + Vite
+# GadgetDrop — frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend for the GadgetDrop project (React + Vite + Tailwind).
+
+Quick start
+
+```powershell
+cd frontend-gadgetdrop
+npm install
+npm run dev
+```
+
+Open the URL reported by Vite (e.g. http://localhost:5173 or http://localhost:5174).
+
+Backend API: http://localhost:5000 (endpoints: `/api/productos`, `/api/auth`, `/api/pedidos`, `/api/admin/pedidos`)
 
 Currently, two official plugins are available:
 

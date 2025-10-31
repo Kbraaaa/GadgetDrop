@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Usuario = require('../models/Usuario');
+const LockHistory = require('../models/LockHistory');
 
 // registro
 const registrarUsuario = async (req, res) => {
@@ -58,9 +59,56 @@ const loginUsuario = async (req, res) => {
         if (!usuario) {
             return res.status(401).json({ mensaje: 'Correo no registrado' });
         }
+
+        // configuración: número máximo de intentos y minutos de bloqueo
+        const MAX_FAILED = Number(process.env.ACCOUNT_MAX_FAILED_ATTEMPTS || 3);
+        const LOCK_MINUTES = Number(process.env.ACCOUNT_LOCKOUT_MINUTES || 3);
+
+        // Comprobar si la cuenta está temporalmente bloqueada
+        if (usuario.lockUntil && new Date() < new Date(usuario.lockUntil)) {
+            const remainMs = new Date(usuario.lockUntil) - new Date();
+            const remainSec = Math.ceil(remainMs / 1000);
+            return res.status(423).json({ mensaje: `Cuenta bloqueada. Intenta de nuevo en ${remainSec} segundos` });
+        }
+
         const esValida = await bcrypt.compare(contraseñaFinal, usuario.contraseña);
         if (!esValida) {
-            return res.status(401).json({ mensaje: 'Contraseña incorrecta' });
+            // incrementar contador y bloquear si supera el máximo
+            usuario.failedLoginAttempts = (usuario.failedLoginAttempts || 0) + 1;
+            if (usuario.failedLoginAttempts >= MAX_FAILED) {
+                usuario.lockUntil = new Date(Date.now() + LOCK_MINUTES * 60 * 1000);
+                usuario.failedLoginAttempts = 0; // reset after locking
+                await usuario.save();
+
+                // registrar en el historial de bloqueos
+                try {
+                    await LockHistory.create({ usuarioId: usuario.id, failedAttempts: MAX_FAILED, lockUntil: usuario.lockUntil });
+                } catch (e) {
+                    console.error('Error creando LockHistory:', e);
+                }
+
+                return res.status(423).json({ mensaje: `Cuenta bloqueada por ${LOCK_MINUTES} minutos debido a múltiples intentos fallidos` });
+            } else {
+                await usuario.save();
+                const remaining = MAX_FAILED - usuario.failedLoginAttempts;
+                return res.status(401).json({ mensaje: `Contraseña incorrecta. Te quedan ${remaining} intentos antes del bloqueo` });
+            }
+        }
+
+        // reset counters on successful login
+        usuario.failedLoginAttempts = 0;
+        usuario.lockUntil = null;
+        await usuario.save();
+
+        // marcar como desbloqueado el último registro de LockHistory si existe
+        try {
+            const lh = await LockHistory.findOne({ where: { usuarioId: usuario.id, unlockedAt: null }, order: [['createdAt', 'DESC']] });
+            if (lh) {
+                lh.unlockedAt = new Date();
+                await lh.save();
+            }
+        } catch (e) {
+            console.error('Error actualizando LockHistory:', e);
         }
 
         // token

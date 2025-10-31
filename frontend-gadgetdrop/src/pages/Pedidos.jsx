@@ -9,18 +9,32 @@ export default function Pedidos() {
 
     useEffect(() => {
         async function cargarPedidos() {
+            setLoading(true);
+            const token = localStorage.getItem('token');
             try {
-                const res = await fetch(`http://localhost:5000/api/pedidos/usuario/${usuario.id}`);
+                const res = await fetch(`http://localhost:5000/api/pedidos/usuario/${usuario.id}`, {
+                    headers: token ? { Authorization: `Bearer ${token}` } : {}
+                });
+
                 const data = await res.json();
-                setPedidos(data);
+                if (!res.ok) {
+                    // si la respuesta no es OK, mostramos vacíos y lanzamos el error para log
+                    console.error('Error fetching pedidos:', data);
+                    setPedidos([]);
+                } else {
+                    // Asegurar que siempre guardamos un array
+                    setPedidos(Array.isArray(data) ? data : []);
+                }
             } catch (err) {
                 console.error(err);
+                setPedidos([]);
             } finally {
                 setLoading(false);
             }
         }
 
-        cargarPedidos();
+        if (usuario && usuario.id) cargarPedidos();
+        else setLoading(false);
     }, [usuario.id]);
 
     return (

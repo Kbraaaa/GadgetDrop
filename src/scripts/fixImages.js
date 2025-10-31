@@ -1,4 +1,3 @@
-// src/scripts/fixImages.js
 const sequelize = require('../config/db');
 const Producto = require('../models/Producto');
 
@@ -9,7 +8,6 @@ async function corregirUrlsImagenes() {
         const productos = await Producto.findAll();
 
         for (const producto of productos) {
-            // Solo corregimos si la imagen no empieza por http
             if (!producto.imagen.startsWith('/img/')) {
                 const nuevaImagen = `/img/${producto.imagen}`;
                 producto.imagen = nuevaImagen;

@@ -7,16 +7,19 @@ const {
     eliminarProducto
 } = require('../controllers/productoController');
 
-// Obtener todos los productos
+const verificarToken = require('../middlewares/authMiddleware');
+const verificarAdmin = require('../middlewares/verificarAdmin');
+
+router.get('/', obtenerProductos);
+router.post('/', verificarToken, verificarAdmin, crearProducto);
+router.put('/:id', verificarToken, verificarAdmin, actualizarProducto);
+router.delete('/:id', verificarToken, verificarAdmin, eliminarProducto);
 router.get('/', obtenerProductos);
 
-// Crear nuevo producto
-router.post('/', crearProducto);
+router.post('/', verificarToken, verificarAdmin, crearProducto);
 
-// Actualizar producto
-router.put('/:id', actualizarProducto);
+router.put('/:id', verificarToken, verificarAdmin, actualizarProducto);
 
-// Eliminar producto
-router.delete('/:id', eliminarProducto);
+router.delete('/:id', verificarToken, verificarAdmin, eliminarProducto);
 
 module.exports = router;

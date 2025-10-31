@@ -10,17 +10,34 @@ export default function Success() {
             const usuario = JSON.parse(localStorage.getItem('usuario')) || {};
             if (!usuario.id) return;
 
+            const params = new URLSearchParams(window.location.search);
+            const sessionId = params.get('session_id');
+
+            const sessionKey = sessionId
+                ? `pedido_guardado_${usuario.id}_${sessionId}`
+                : `pedido_guardado_${usuario.id}`;
+            if (sessionStorage.getItem(sessionKey)) return;
+
             try {
                 const resCarrito = await fetch(`http://localhost:5000/api/carrito/${usuario.id}`);
                 const carrito = await resCarrito.json();
 
                 if (!Array.isArray(carrito) || carrito.length === 0) return;
 
-                await fetch('http://localhost:5000/api/pedidos/pagado', {
+                const payload = { usuarioId: usuario.id, carrito };
+                if (sessionId) payload.externalId = sessionId;
+
+                const res = await fetch('http://localhost:5000/api/pedidos/pagado', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ usuarioId: usuario.id, carrito }),
+                    body: JSON.stringify(payload),
                 });
+
+                if (res.ok) {
+                    sessionStorage.setItem(sessionKey, '1');
+                } else {
+                    console.error('Error al guardar pedido (status):', res.status);
+                }
             } catch (err) {
                 console.error("❌ Error al guardar pedido:", err);
             }

@@ -7,16 +7,13 @@ const {
     crearPedidoDesdeStripe
 } = require('../controllers/pedidoController');
 
-// Desde Stripe (cuando el pago se confirma)
+const verificarToken = require('../middlewares/authMiddleware');
+const verificarAdmin = require('../middlewares/verificarAdmin');
+
+// Rutas de pedidos
 router.post('/pagado', crearPedidoDesdeStripe);
-
-// Crear un pedido manual (modo test o sin Stripe)
 router.post('/', crearPedido);
-
-// Consultar pedidos de un usuario
-router.get('/usuario/:usuarioId', obtenerPedidosPorUsuario);
-
-// Actualizar el estado de un pedido
-router.put('/:id/estado', actualizarEstadoPedido);
+router.get('/usuario/:usuarioId', verificarToken, obtenerPedidosPorUsuario);
+router.put('/:id/estado', verificarToken, verificarAdmin, actualizarEstadoPedido);
 
 module.exports = router;

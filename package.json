@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "test": "set NODE_ENV=test&& jest --coverage --verbose"
+    "test": "set NODE_ENV=test&& jest --coverage --verbose",
+    "seed": "node src/scripts/seed.js"
   },
   "keywords": [],
   "author": "",

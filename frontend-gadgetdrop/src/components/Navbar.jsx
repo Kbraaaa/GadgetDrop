@@ -24,7 +24,7 @@ export default function Navbar() {
                     <Link to="/carrito" className="hover:text-yellow-400 transition">Carrito</Link>
                     <Link to="/pedidos" className="hover:text-yellow-400 transition">Mis Pedidos</Link>
                     {usuario?.rol === 'admin' && (
-                        <Link to="/admin/pedidos" className="hover:text-yellow-400 transition">Admin</Link>
+                        <Link to="/admin" className="hover:text-yellow-400 transition">Admin</Link>
                     )}
                 </div>
 

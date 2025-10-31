@@ -54,7 +54,7 @@ export default function Cart() {
 
     const handleCheckout = async () => {
         try {
-            const res = await fetch('http://localhost:5000/api/pagos/stripe', {
+            const res = await fetch('http://localhost:5000/api/pago/stripe', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ carrito: items, usuarioId: usuario.id }),

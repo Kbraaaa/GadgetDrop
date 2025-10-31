@@ -10,6 +10,7 @@ const carritoRoutes = require('./routes/carritoRoutes');
 const authRoutes = require('./routes/authRoutes');
 const pagoRoutes = require('./routes/pagoRoutes');
 const productoRoutes = require('./routes/productoRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 
@@ -21,5 +22,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/carrito', carritoRoutes);
 app.use('/api/pago', pagoRoutes);
 app.use('/api/productos', productoRoutes);
+// Rutas para administración (panel admin)
+app.use('/api/admin', adminRoutes);
 
 module.exports = app;
