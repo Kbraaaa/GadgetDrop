@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
+import { useToast } from '../components/Toast';
 
 export default function Home() {
     const [productos, setProductos] = useState([]);
@@ -32,10 +33,12 @@ export default function Home() {
             .finally(() => setLoading(false));
     }, []);
 
+    const { addToast } = useToast();
+
     const agregarAlCarrito = async producto => {
         const usuario = JSON.parse(localStorage.getItem('usuario'));
         if (!usuario) {
-            alert('Debes iniciar sesión para agregar al carrito');
+            addToast({ type: 'info', title: 'Autenticación', message: 'Debes iniciar sesión para agregar al carrito' });
             return;
         }
 
@@ -55,10 +58,10 @@ export default function Home() {
             const resultado = await res.json();
             if (!res.ok) throw new Error(resultado.error || 'Error al agregar al carrito');
 
-            alert('Producto agregado al carrito');
+            addToast({ type: 'success', title: 'Carrito', message: 'Producto agregado al carrito' });
         } catch (err) {
             console.error('❌ Error al agregar al carrito:', err);
-            alert('Error al agregar al carrito');
+            addToast({ type: 'error', title: 'Carrito', message: 'Error al agregar al carrito' });
         }
     };
 

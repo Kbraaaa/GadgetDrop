@@ -4,6 +4,7 @@ const Carrito = require('./Carrito');
 const Pedido = require('./Pedido');
 const DetallePedido = require('./DetallePedido');
 const LockHistory = require('./LockHistory');
+const SupportMessage = require('./SupportMessage');
 
 Usuario.hasMany(Carrito, { foreignKey: 'usuarioId' });
 Carrito.belongsTo(Usuario, { foreignKey: 'usuarioId' });
@@ -18,6 +19,10 @@ DetallePedido.belongsTo(Producto, { foreignKey: 'productoId' });
 Usuario.hasMany(LockHistory, { foreignKey: 'usuarioId' });
 LockHistory.belongsTo(Usuario, { foreignKey: 'usuarioId' });
 
+// Support messages
+Usuario.hasMany(SupportMessage, { foreignKey: 'usuarioId' });
+SupportMessage.belongsTo(Usuario, { foreignKey: 'usuarioId' });
+
 module.exports = {
     Usuario,
     Producto,
@@ -25,4 +30,5 @@ module.exports = {
     Pedido,
     DetallePedido
     , LockHistory
+    , SupportMessage
 };

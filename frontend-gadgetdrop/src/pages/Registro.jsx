@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useToast } from '../components/Toast';
 
 export default function Registro() {
     const [nombre, setNombre] = useState('');
@@ -7,6 +8,8 @@ export default function Registro() {
     const [contraseña, setContraseña] = useState('');
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+
+    const { addToast } = useToast();
 
     const handleRegistro = async e => {
         e.preventDefault();
@@ -22,7 +25,7 @@ export default function Registro() {
             const data = await res.json();
             if (!res.ok) throw new Error(data.mensaje || 'Error al registrar');
 
-            alert('Usuario registrado con éxito');
+            addToast({ type: 'success', title: 'Registro', message: 'Usuario registrado con éxito' });
             navigate('/login');
         } catch (err) {
             setError(err.message);

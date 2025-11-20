@@ -23,6 +23,7 @@ export default function Navbar() {
                     <Link to="/" className="hover:text-yellow-400 transition">Inicio</Link>
                     <Link to="/carrito" className="hover:text-yellow-400 transition">Carrito</Link>
                     <Link to="/pedidos" className="hover:text-yellow-400 transition">Mis Pedidos</Link>
+                    <Link to="/support" className="hover:text-yellow-400 transition">Soporte</Link>
                     {usuario?.rol === 'admin' && (
                         <Link to="/admin" className="hover:text-yellow-400 transition">Admin</Link>
                     )}

@@ -2,6 +2,8 @@ const Pedido = require('../models/Pedido');
 const DetallePedido = require('../models/DetallePedido');
 const Carrito = require('../models/Carrito');
 const Producto = require('../models/Producto');
+const Usuario = require('../models/Usuario');
+const mailer = require('../utils/mailer');
 
 const crearPedido = async (req, res) => {
     const { usuarioId, externalId } = req.body;
@@ -80,6 +82,19 @@ const crearPedido = async (req, res) => {
 
         await Carrito.destroy({ where: { usuarioId } });
 
+        // Enviar correo de confirmación al comprador (no bloquear respuesta en caso de error)
+        (async () => {
+            try {
+                const usuario = await Usuario.findByPk(usuarioId);
+                if (usuario && usuario.correo) {
+                    const items = carrito.map(i => ({ nombre: i.Producto.nombre, cantidad: i.cantidad, precioUnitario: i.Producto.precio }));
+                    await mailer.sendOrderConfirmation(usuario.correo, nuevoPedido, items);
+                }
+            } catch (e) {
+                console.error('Error enviando email de confirmación:', e);
+            }
+        })();
+
         res.json({ mensaje: 'Pedido creado con éxito', pedidoId: nuevoPedido.id });
     } catch (error) {
         console.error('❌ ERROR AL CREAR PEDIDO:', error);
@@ -156,6 +171,19 @@ const crearPedidoDesdeStripe = async (req, res) => {
         }
 
         await Carrito.destroy({ where: { usuarioId } });
+
+        // Enviar correo de confirmación al comprador (no bloquear respuesta en caso de error)
+        (async () => {
+            try {
+                const usuario = await Usuario.findByPk(usuarioId);
+                if (usuario && usuario.correo) {
+                    const items = (carrito || []).map(i => ({ nombre: i.Producto.nombre, cantidad: i.cantidad, precioUnitario: i.Producto.precio }));
+                    await mailer.sendOrderConfirmation(usuario.correo, nuevoPedido, items);
+                }
+            } catch (e) {
+                console.error('Error enviando email de confirmación:', e);
+            }
+        })();
 
         res.json({ mensaje: 'Pedido guardado luego del pago', pedidoId: nuevoPedido.id });
     } catch (err) {

@@ -8,6 +8,7 @@ import Pedidos from './pages/Pedidos';
 import PrivateRoute from './components/PrivateRoute';
 import Registro from './pages/Registro';
 import Admin from './pages/Admin';
+import Support from './pages/Support';
 
 
 export default function App() {
@@ -18,6 +19,7 @@ export default function App() {
       <Route path="/" element={<Home />} />
       <Route path="/carrito" element={<Cart />} />
       <Route path="/success" element={<Success />} />
+  <Route path="/support" element={<Support />} />
 
       {/* Rutas privadas */}
       <Route path="/pedidos" element={

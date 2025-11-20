@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ShoppingCart, Trash2, Plus, Minus } from 'lucide-react';
 import Navbar from '../components/Navbar';
+import { useToast } from '../components/Toast';
 export default function Cart() {
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -52,6 +53,8 @@ export default function Cart() {
         }
     };
 
+    const { addToast } = useToast();
+
     const handleCheckout = async () => {
         try {
             const res = await fetch('http://localhost:5000/api/pago/stripe', {
@@ -61,10 +64,10 @@ export default function Cart() {
             });
             const data = await res.json();
             if (data.url) window.location.href = data.url;
-            else alert('Error al crear sesión de pago');
+            else addToast({ type: 'error', title: 'Pago', message: 'Error al crear sesión de pago' });
         } catch (err) {
             console.error(err);
-            alert('Error en el proceso de pago');
+            addToast({ type: 'error', title: 'Pago', message: 'Error en el proceso de pago' });
         }
     };
 

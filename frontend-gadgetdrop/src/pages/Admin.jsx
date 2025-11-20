@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AdminProducts from '../components/AdminProducts';
 import AdminOrders from '../components/AdminOrders';
+import AdminSupport from '../components/AdminSupport';
 
 export default function Admin() {
   const usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
@@ -27,11 +28,17 @@ export default function Admin() {
           className={`px-4 py-2 rounded-md font-medium transition ${tab === 'pedidos' ? 'bg-blue-600 text-white shadow' : 'bg-white border text-slate-700'}`}>
           Pedidos
         </button>
+        <button
+          onClick={() => setTab('soporte')}
+          className={`px-4 py-2 rounded-md font-medium transition ${tab === 'soporte' ? 'bg-blue-600 text-white shadow' : 'bg-white border text-slate-700'}`}>
+          Soporte
+        </button>
       </nav>
 
       <main>
-        {tab === 'productos' && <AdminProducts />}
-        {tab === 'pedidos' && <AdminOrders />}
+  {tab === 'productos' && <AdminProducts />}
+  {tab === 'pedidos' && <AdminOrders />}
+  {tab === 'soporte' && <AdminSupport />}
       </main>
     </div>
   );

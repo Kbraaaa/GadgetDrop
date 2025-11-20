@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Confirmación de pedido</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: #111;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th,
+    td {
+      padding: 8px;
+      border: 1px solid #eee;
+    }
+
+    th {
+      text-align: left;
+      background: #fafafa;
+    }
+
+    .right {
+      text-align: right;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .total {
+      font-weight: 700;
+      margin-top: 12px;
+    }
+
+    .muted {
+      color: #666;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Confirmación de pedido #{{order.id}}</h2>
+    <p>Gracias por tu compra. Aquí tienes los detalles de tu pedido:</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th class="center">Cantidad</th>
+          <th class="right">Precio unitario</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each items}}
+        <tr>
+          <td>{{this.nombre}}</td>
+          <td class="center">{{this.cantidad}}</td>
+          <td class="right">${{this.precioUnitario}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+
+    <p class="total">Total: ${{total}}</p>
+    <p class="muted">Fecha del pedido: {{date}}</p>
+    <hr />
+    <p class="muted">GadgetDrop</p>
+  </div>
+</body>
+
+</html>

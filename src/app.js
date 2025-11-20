@@ -24,5 +24,7 @@ app.use('/api/pago', pagoRoutes);
 app.use('/api/productos', productoRoutes);
 // Rutas para administración (panel admin)
 app.use('/api/admin', adminRoutes);
+// Rutas de soporte (FAQ / mensajes)
+app.use('/api/support', require('./routes/supportRoutes'));
 
 module.exports = app;
