@@ -23,7 +23,7 @@ const SupportMessage = sequelize.define('SupportMessage', {
         allowNull: false
     },
     status: {
-        type: DataTypes.ENUM('open','closed'),
+        type: DataTypes.ENUM('open', 'closed'),
         defaultValue: 'open'
     },
     metadata: {

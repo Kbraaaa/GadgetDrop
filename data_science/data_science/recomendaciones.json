@@ -1,0 +1,990 @@
+{
+  "generado_en": "2026-05-15 09:48:58",
+  "total_productos": 24,
+  "recomendaciones": {
+    "2": {
+      "nombre": "Anillo de Luz LED 26cm",
+      "categoria": "Creadores de Contenido",
+      "recomendados": [
+        {
+          "productoId": 34,
+          "nombre": "Control Remoto para Presentaciones",
+          "categoria": "Creadores de Contenido",
+          "precio": 19.99,
+          "similitud": 0.7675
+        },
+        {
+          "productoId": 36,
+          "nombre": "Luz de Fondo LED para Escritorio",
+          "categoria": "Creadores de Contenido",
+          "precio": 27.99,
+          "similitud": 0.7637
+        },
+        {
+          "productoId": 14,
+          "nombre": "Micrófono Condensador",
+          "categoria": "Creadores de Contenido",
+          "precio": 74.99,
+          "similitud": 0.6792
+        },
+        {
+          "productoId": 4,
+          "nombre": "Mouse gamer RGB",
+          "categoria": "Gaming",
+          "precio": 64.99,
+          "similitud": 0.6489
+        },
+        {
+          "productoId": 33,
+          "nombre": "Funda Rígida para Laptop 15\"",
+          "categoria": "Accesorios Móviles",
+          "precio": 24.99,
+          "similitud": 0.6434
+        }
+      ]
+    },
+    "3": {
+      "nombre": "Powerbank 20,000mAh Carga Rápida",
+      "categoria": "Accesorios Móviles",
+      "recomendados": [
+        {
+          "productoId": 13,
+          "nombre": "Hub USB 4 Puertos",
+          "categoria": "Workstation",
+          "precio": 14.99,
+          "similitud": 0.744
+        },
+        {
+          "productoId": 33,
+          "nombre": "Funda Rígida para Laptop 15\"",
+          "categoria": "Accesorios Móviles",
+          "precio": 24.99,
+          "similitud": 0.7181
+        },
+        {
+          "productoId": 34,
+          "nombre": "Control Remoto para Presentaciones",
+          "categoria": "Creadores de Contenido",
+          "precio": 19.99,
+          "similitud": 0.7089
+        },
+        {
+          "productoId": 22,
+          "nombre": "Gamepad Bluetooth para Smartphone",
+          "categoria": "Gaming",
+          "precio": 44.99,
+          "similitud": 0.6267
+        },
+        {
+          "productoId": 31,
+          "nombre": "Lámpara LED de Escritorio",
+          "categoria": "Workstation",
+          "precio": 34.99,
+          "similitud": 0.6176
+        }
+      ]
+    },
+    "4": {
+      "nombre": "Mouse gamer RGB",
+      "categoria": "Gaming",
+      "recomendados": [
+        {
+          "productoId": 12,
+          "nombre": "Alfombrilla RGB",
+          "categoria": "Gaming",
+          "precio": 19.99,
+          "similitud": 0.764
+        },
+        {
+          "productoId": 6,
+          "nombre": "Teclado Mecánico RGB",
+          "categoria": "Gaming",
+          "precio": 189.99,
+          "similitud": 0.7344
+        },
+        {
+          "productoId": 22,
+          "nombre": "Gamepad Bluetooth para Smartphone",
+          "categoria": "Gaming",
+          "precio": 44.99,
+          "similitud": 0.7324
+        },
+        {
+          "productoId": 33,
+          "nombre": "Funda Rígida para Laptop 15\"",
+          "categoria": "Accesorios Móviles",
+          "precio": 24.99,
+          "similitud": 0.7148
+        },
+        {
+          "productoId": 29,
+          "nombre": "Audífonos Bluetooth Over-Ear",
+          "categoria": "Gaming",
+          "precio": 79.99,
+          "similitud": 0.6698
+        }
+      ]
+    },
+    "6": {
+      "nombre": "Teclado Mecánico RGB",
+      "categoria": "Gaming",
+      "recomendados": [
+        {
+          "productoId": 4,
+          "nombre": "Mouse gamer RGB",
+          "categoria": "Gaming",
+          "precio": 64.99,
+          "similitud": 0.7344
+        },
+        {
+          "productoId": 35,
+          "nombre": "Banda Deportiva Inteligente",
+          "categoria": "Wearables",
+          "precio": 45.99,
+          "similitud": 0.5618
+        },
+        {
+          "productoId": 12,
+          "nombre": "Alfombrilla RGB",
+          "categoria": "Gaming",
+          "precio": 19.99,
+          "similitud": 0.5012
+        },
+        {
+          "productoId": 36,
+          "nombre": "Luz de Fondo LED para Escritorio",
+          "categoria": "Creadores de Contenido",
+          "precio": 27.99,
+          "similitud": 0.4985
+        },
+        {
+          "productoId": 2,
+          "nombre": "Anillo de Luz LED 26cm",
+          "categoria": "Creadores de Contenido",
+          "precio": 49.99,
+          "similitud": 0.4948
+        }
+      ]
+    },
+    "7": {
+      "nombre": "Cable USB-C a USB-C 60W",
+      "categoria": "Accesorios Móviles",
+      "recomendados": [
+        {
+          "productoId": 11,
+          "nombre": "Silla Ergonómica",
+          "categoria": "Workstation",
+          "precio": 199.99,
+          "similitud": 0.7053
+        },
+        {
+          "productoId": 16,
+          "nombre": "Estuche Organizador para Gadgets",
+          "categoria": "Accesorios Móviles",
+          "precio": 14.99,
+          "similitud": 0.7053
+        },
+        {
+          "productoId": 8,
+          "nombre": "Trípode Ajustable + Soporte de Celular",
+          "categoria": "Creadores de Contenido",
+          "precio": 54.99,
+          "similitud": 0.6046
+        },
+        {
+          "productoId": 34,
+          "nombre": "Control Remoto para Presentaciones",
+          "categoria": "Creadores de Contenido",
+          "precio": 19.99,
+          "similitud": 0.601
+        },
+        {
+          "productoId": 15,
+          "nombre": "Smartwatch Deportivo Serie 8",
+          "categoria": "Wearables",
+          "precio": 89.99,
+          "similitud": 0.5974
+        }
+      ]
+    },
+    "8": {
+      "nombre": "Trípode Ajustable + Soporte de Celular",
+      "categoria": "Creadores de Contenido",
+      "recomendados": [
+        {
+          "productoId": 14,
+          "nombre": "Micrófono Condensador",
+          "categoria": "Creadores de Contenido",
+          "precio": 74.99,
+          "similitud": 0.6221
+        },
+        {
+          "productoId": 2,
+          "nombre": "Anillo de Luz LED 26cm",
+          "categoria": "Creadores de Contenido",
+          "precio": 49.99,
+          "similitud": 0.614
+        },
+        {
+          "productoId": 7,
+          "nombre": "Cable USB-C a USB-C 60W",
+          "categoria": "Accesorios Móviles",
+          "precio": 29.99,
+          "similitud": 0.6046
+        },
+        {
+          "productoId": 36,
+          "nombre": "Luz de Fondo LED para Escritorio",
+          "categoria": "Creadores de Contenido",
+          "precio": 27.99,
+          "similitud": 0.602
+        },
+        {
+          "productoId": 34,
+          "nombre": "Control Remoto para Presentaciones",
+          "categoria": "Creadores de Contenido",
+          "precio": 19.99,
+          "similitud": 0.5625
+        }
+      ]
+    },
+    "9": {
+      "nombre": "Monitor 24\"",
+      "categoria": "Gaming",
+      "recomendados": [
+        {
+          "productoId": 4,
+          "nombre": "Mouse gamer RGB",
+          "categoria": "Gaming",
+          "precio": 64.99,
+          "similitud": 0.4628
+        },
+        {
+          "productoId": 8,
+          "nombre": "Trípode Ajustable + Soporte de Celular",
+          "categoria": "Creadores de Contenido",
+          "precio": 54.99,
+          "similitud": 0.4127
+        },
+        {
+          "productoId": 35,
+          "nombre": "Banda Deportiva Inteligente",
+          "categoria": "Wearables",
+          "precio": 45.99,
+          "similitud": 0.4084
+        },
+        {
+          "productoId": 6,
+          "nombre": "Teclado Mecánico RGB",
+          "categoria": "Gaming",
+          "precio": 189.99,
+          "similitud": 0.4054
+        },
+        {
+          "productoId": 12,
+          "nombre": "Alfombrilla RGB",
+          "categoria": "Gaming",
+          "precio": 19.99,
+          "similitud": 0.3782
+        }
+      ]
+    },
+    "11": {
+      "nombre": "Silla Ergonómica",
+      "categoria": "Workstation",
+      "recomendados": [
+        {
+          "productoId": 7,
+          "nombre": "Cable USB-C a USB-C 60W",
+          "categoria": "Accesorios Móviles",
+          "precio": 29.99,
+          "similitud": 0.7053
+        },
+        {
+          "productoId": 16,
+          "nombre": "Estuche Organizador para Gadgets",
+          "categoria": "Accesorios Móviles",
+          "precio": 14.99,
+          "similitud": 0.6667
+        },
+        {
+          "productoId": 34,
+          "nombre": "Control Remoto para Presentaciones",
+          "categoria": "Creadores de Contenido",
+          "precio": 19.99,
+          "similitud": 0.6182
+        },
+        {
+          "productoId": 13,
+          "nombre": "Hub USB 4 Puertos",
+          "categoria": "Workstation",
+          "precio": 14.99,
+          "similitud": 0.6042
+        },
+        {
+          "productoId": 3,
+          "nombre": "Powerbank 20,000mAh Carga Rápida",
+          "categoria": "Accesorios Móviles",
+          "precio": 89.99,
+          "similitud": 0.601
+        }
+      ]
+    },
+    "12": {
+      "nombre": "Alfombrilla RGB",
+      "categoria": "Gaming",
+      "recomendados": [
+        {
+          "productoId": 4,
+          "nombre": "Mouse gamer RGB",
+          "categoria": "Gaming",
+          "precio": 64.99,
+          "similitud": 0.764
+        },
+        {
+          "productoId": 22,
+          "nombre": "Gamepad Bluetooth para Smartphone",
+          "categoria": "Gaming",
+          "precio": 44.99,
+          "similitud": 0.7205
+        },
+        {
+          "productoId": 13,
+          "nombre": "Hub USB 4 Puertos",
+          "categoria": "Workstation",
+          "precio": 14.99,
+          "similitud": 0.7019
+        },
+        {
+          "productoId": 31,
+          "nombre": "Lámpara LED de Escritorio",
+          "categoria": "Workstation",
+          "precio": 34.99,
+          "similitud": 0.6545
+        },
+        {
+          "productoId": 29,
+          "nombre": "Audífonos Bluetooth Over-Ear",
+          "categoria": "Gaming",
+          "precio": 79.99,
+          "similitud": 0.582
+        }
+      ]
+    },
+    "13": {
+      "nombre": "Hub USB 4 Puertos",
+      "categoria": "Workstation",
+      "recomendados": [
+        {
+          "productoId": 28,
+          "nombre": "WebCam HD",
+          "categoria": "Workstation",
+          "precio": 44.99,
+          "similitud": 0.8162
+        },
+        {
+          "productoId": 32,
+          "nombre": "Cargador Inalámbrico 15W",
+          "categoria": "Accesorios Móviles",
+          "precio": 34.99,
+          "similitud": 0.767
+        },
+        {
+          "productoId": 3,
+          "nombre": "Powerbank 20,000mAh Carga Rápida",
+          "categoria": "Accesorios Móviles",
+          "precio": 89.99,
+          "similitud": 0.744
+        },
+        {
+          "productoId": 12,
+          "nombre": "Alfombrilla RGB",
+          "categoria": "Gaming",
+          "precio": 19.99,
+          "similitud": 0.7019
+        },
+        {
+          "productoId": 31,
+          "nombre": "Lámpara LED de Escritorio",
+          "categoria": "Workstation",
+          "precio": 34.99,
+          "similitud": 0.6969
+        }
+      ]
+    },
+    "14": {
+      "nombre": "Micrófono Condensador",
+      "categoria": "Creadores de Contenido",
+      "recomendados": [
+        {
+          "productoId": 36,
+          "nombre": "Luz de Fondo LED para Escritorio",
+          "categoria": "Creadores de Contenido",
+          "precio": 27.99,
+          "similitud": 0.7075
+        },
+        {
+          "productoId": 2,
+          "nombre": "Anillo de Luz LED 26cm",
+          "categoria": "Creadores de Contenido",
+          "precio": 49.99,
+          "similitud": 0.6792
+        },
+        {
+          "productoId": 4,
+          "nombre": "Mouse gamer RGB",
+          "categoria": "Gaming",
+          "precio": 64.99,
+          "similitud": 0.626
+        },
+        {
+          "productoId": 8,
+          "nombre": "Trípode Ajustable + Soporte de Celular",
+          "categoria": "Creadores de Contenido",
+          "precio": 54.99,
+          "similitud": 0.6221
+        },
+        {
+          "productoId": 31,
+          "nombre": "Lámpara LED de Escritorio",
+          "categoria": "Workstation",
+          "precio": 34.99,
+          "similitud": 0.5644
+        }
+      ]
+    },
+    "15": {
+      "nombre": "Smartwatch Deportivo Serie 8",
+      "categoria": "Wearables",
+      "recomendados": [
+        {
+          "productoId": 36,
+          "nombre": "Luz de Fondo LED para Escritorio",
+          "categoria": "Creadores de Contenido",
+          "precio": 27.99,
+          "similitud": 0.6908
+        },
+        {
+          "productoId": 7,
+          "nombre": "Cable USB-C a USB-C 60W",
+          "categoria": "Accesorios Móviles",
+          "precio": 29.99,
+          "similitud": 0.5974
+        },
+        {
+          "productoId": 2,
+          "nombre": "Anillo de Luz LED 26cm",
+          "categoria": "Creadores de Contenido",
+          "precio": 49.99,
+          "similitud": 0.5603
+        },
+        {
+          "productoId": 14,
+          "nombre": "Micrófono Condensador",
+          "categoria": "Creadores de Contenido",
+          "precio": 74.99,
+          "similitud": 0.4967
+        },
+        {
+          "productoId": 8,
+          "nombre": "Trípode Ajustable + Soporte de Celular",
+          "categoria": "Creadores de Contenido",
+          "precio": 54.99,
+          "similitud": 0.4888
+        }
+      ]
+    },
+    "16": {
+      "nombre": "Estuche Organizador para Gadgets",
+      "categoria": "Accesorios Móviles",
+      "recomendados": [
+        {
+          "productoId": 7,
+          "nombre": "Cable USB-C a USB-C 60W",
+          "categoria": "Accesorios Móviles",
+          "precio": 29.99,
+          "similitud": 0.7053
+        },
+        {
+          "productoId": 11,
+          "nombre": "Silla Ergonómica",
+          "categoria": "Workstation",
+          "precio": 199.99,
+          "similitud": 0.6667
+        },
+        {
+          "productoId": 17,
+          "nombre": "Enfriador para Laptop",
+          "categoria": "Workstation",
+          "precio": 24.99,
+          "similitud": 0.61
+        },
+        {
+          "productoId": 15,
+          "nombre": "Smartwatch Deportivo Serie 8",
+          "categoria": "Wearables",
+          "precio": 89.99,
+          "similitud": 0.4463
+        },
+        {
+          "productoId": 6,
+          "nombre": "Teclado Mecánico RGB",
+          "categoria": "Gaming",
+          "precio": 189.99,
+          "similitud": 0.414
+        }
+      ]
+    },
+    "17": {
+      "nombre": "Enfriador para Laptop",
+      "categoria": "Workstation",
+      "recomendados": [
+        {
+          "productoId": 33,
+          "nombre": "Funda Rígida para Laptop 15\"",
+          "categoria": "Accesorios Móviles",
+          "precio": 24.99,
+          "similitud": 0.6669
+        },
+        {
+          "productoId": 32,
+          "nombre": "Cargador Inalámbrico 15W",
+          "categoria": "Accesorios Móviles",
+          "precio": 34.99,
+          "similitud": 0.655
+        },
+        {
+          "productoId": 13,
+          "nombre": "Hub USB 4 Puertos",
+          "categoria": "Workstation",
+          "precio": 14.99,
+          "similitud": 0.631
+        },
+        {
+          "productoId": 16,
+          "nombre": "Estuche Organizador para Gadgets",
+          "categoria": "Accesorios Móviles",
+          "precio": 14.99,
+          "similitud": 0.61
+        },
+        {
+          "productoId": 11,
+          "nombre": "Silla Ergonómica",
+          "categoria": "Workstation",
+          "precio": 199.99,
+          "similitud": 0.5846
+        }
+      ]
+    },
+    "22": {
+      "nombre": "Gamepad Bluetooth para Smartphone",
+      "categoria": "Gaming",
+      "recomendados": [
+        {
+          "productoId": 29,
+          "nombre": "Audífonos Bluetooth Over-Ear",
+          "categoria": "Gaming",
+          "precio": 79.99,
+          "similitud": 0.8928
+        },
+        {
+          "productoId": 33,
+          "nombre": "Funda Rígida para Laptop 15\"",
+          "categoria": "Accesorios Móviles",
+          "precio": 24.99,
+          "similitud": 0.7471
+        },
+        {
+          "productoId": 4,
+          "nombre": "Mouse gamer RGB",
+          "categoria": "Gaming",
+          "precio": 64.99,
+          "similitud": 0.7324
+        },
+        {
+          "productoId": 31,
+          "nombre": "Lámpara LED de Escritorio",
+          "categoria": "Workstation",
+          "precio": 34.99,
+          "similitud": 0.7246
+        },
+        {
+          "productoId": 12,
+          "nombre": "Alfombrilla RGB",
+          "categoria": "Gaming",
+          "precio": 19.99,
+          "similitud": 0.7205
+        }
+      ]
+    },
+    "28": {
+      "nombre": "WebCam HD",
+      "categoria": "Workstation",
+      "recomendados": [
+        {
+          "productoId": 34,
+          "nombre": "Control Remoto para Presentaciones",
+          "categoria": "Creadores de Contenido",
+          "precio": 19.99,
+          "similitud": 0.8262
+        },
+        {
+          "productoId": 13,
+          "nombre": "Hub USB 4 Puertos",
+          "categoria": "Workstation",
+          "precio": 14.99,
+          "similitud": 0.8162
+        },
+        {
+          "productoId": 32,
+          "nombre": "Cargador Inalámbrico 15W",
+          "categoria": "Accesorios Móviles",
+          "precio": 34.99,
+          "similitud": 0.744
+        },
+        {
+          "productoId": 3,
+          "nombre": "Powerbank 20,000mAh Carga Rápida",
+          "categoria": "Accesorios Móviles",
+          "precio": 89.99,
+          "similitud": 0.6085
+        },
+        {
+          "productoId": 4,
+          "nombre": "Mouse gamer RGB",
+          "categoria": "Gaming",
+          "precio": 64.99,
+          "similitud": 0.5835
+        }
+      ]
+    },
+    "29": {
+      "nombre": "Audífonos Bluetooth Over-Ear",
+      "categoria": "Gaming",
+      "recomendados": [
+        {
+          "productoId": 22,
+          "nombre": "Gamepad Bluetooth para Smartphone",
+          "categoria": "Gaming",
+          "precio": 44.99,
+          "similitud": 0.8928
+        },
+        {
+          "productoId": 4,
+          "nombre": "Mouse gamer RGB",
+          "categoria": "Gaming",
+          "precio": 64.99,
+          "similitud": 0.6698
+        },
+        {
+          "productoId": 31,
+          "nombre": "Lámpara LED de Escritorio",
+          "categoria": "Workstation",
+          "precio": 34.99,
+          "similitud": 0.6608
+        },
+        {
+          "productoId": 12,
+          "nombre": "Alfombrilla RGB",
+          "categoria": "Gaming",
+          "precio": 19.99,
+          "similitud": 0.582
+        },
+        {
+          "productoId": 33,
+          "nombre": "Funda Rígida para Laptop 15\"",
+          "categoria": "Accesorios Móviles",
+          "precio": 24.99,
+          "similitud": 0.5781
+        }
+      ]
+    },
+    "30": {
+      "nombre": "Soporte Articulado para Monitor",
+      "categoria": "Workstation",
+      "recomendados": [
+        {
+          "productoId": 11,
+          "nombre": "Silla Ergonómica",
+          "categoria": "Workstation",
+          "precio": 199.99,
+          "similitud": 0.4867
+        },
+        {
+          "productoId": 12,
+          "nombre": "Alfombrilla RGB",
+          "categoria": "Gaming",
+          "precio": 19.99,
+          "similitud": 0.3228
+        },
+        {
+          "productoId": 33,
+          "nombre": "Funda Rígida para Laptop 15\"",
+          "categoria": "Accesorios Móviles",
+          "precio": 24.99,
+          "similitud": 0.2645
+        },
+        {
+          "productoId": 3,
+          "nombre": "Powerbank 20,000mAh Carga Rápida",
+          "categoria": "Accesorios Móviles",
+          "precio": 89.99,
+          "similitud": 0.2638
+        },
+        {
+          "productoId": 15,
+          "nombre": "Smartwatch Deportivo Serie 8",
+          "categoria": "Wearables",
+          "precio": 89.99,
+          "similitud": 0.2482
+        }
+      ]
+    },
+    "31": {
+      "nombre": "Lámpara LED de Escritorio",
+      "categoria": "Workstation",
+      "recomendados": [
+        {
+          "productoId": 22,
+          "nombre": "Gamepad Bluetooth para Smartphone",
+          "categoria": "Gaming",
+          "precio": 44.99,
+          "similitud": 0.7246
+        },
+        {
+          "productoId": 13,
+          "nombre": "Hub USB 4 Puertos",
+          "categoria": "Workstation",
+          "precio": 14.99,
+          "similitud": 0.6969
+        },
+        {
+          "productoId": 29,
+          "nombre": "Audífonos Bluetooth Over-Ear",
+          "categoria": "Gaming",
+          "precio": 79.99,
+          "similitud": 0.6608
+        },
+        {
+          "productoId": 12,
+          "nombre": "Alfombrilla RGB",
+          "categoria": "Gaming",
+          "precio": 19.99,
+          "similitud": 0.6545
+        },
+        {
+          "productoId": 32,
+          "nombre": "Cargador Inalámbrico 15W",
+          "categoria": "Accesorios Móviles",
+          "precio": 34.99,
+          "similitud": 0.6369
+        }
+      ]
+    },
+    "32": {
+      "nombre": "Cargador Inalámbrico 15W",
+      "categoria": "Accesorios Móviles",
+      "recomendados": [
+        {
+          "productoId": 13,
+          "nombre": "Hub USB 4 Puertos",
+          "categoria": "Workstation",
+          "precio": 14.99,
+          "similitud": 0.767
+        },
+        {
+          "productoId": 28,
+          "nombre": "WebCam HD",
+          "categoria": "Workstation",
+          "precio": 44.99,
+          "similitud": 0.744
+        },
+        {
+          "productoId": 17,
+          "nombre": "Enfriador para Laptop",
+          "categoria": "Workstation",
+          "precio": 24.99,
+          "similitud": 0.655
+        },
+        {
+          "productoId": 31,
+          "nombre": "Lámpara LED de Escritorio",
+          "categoria": "Workstation",
+          "precio": 34.99,
+          "similitud": 0.6369
+        },
+        {
+          "productoId": 34,
+          "nombre": "Control Remoto para Presentaciones",
+          "categoria": "Creadores de Contenido",
+          "precio": 19.99,
+          "similitud": 0.5988
+        }
+      ]
+    },
+    "33": {
+      "nombre": "Funda Rígida para Laptop 15\"",
+      "categoria": "Accesorios Móviles",
+      "recomendados": [
+        {
+          "productoId": 22,
+          "nombre": "Gamepad Bluetooth para Smartphone",
+          "categoria": "Gaming",
+          "precio": 44.99,
+          "similitud": 0.7471
+        },
+        {
+          "productoId": 3,
+          "nombre": "Powerbank 20,000mAh Carga Rápida",
+          "categoria": "Accesorios Móviles",
+          "precio": 89.99,
+          "similitud": 0.7181
+        },
+        {
+          "productoId": 4,
+          "nombre": "Mouse gamer RGB",
+          "categoria": "Gaming",
+          "precio": 64.99,
+          "similitud": 0.7148
+        },
+        {
+          "productoId": 17,
+          "nombre": "Enfriador para Laptop",
+          "categoria": "Workstation",
+          "precio": 24.99,
+          "similitud": 0.6669
+        },
+        {
+          "productoId": 2,
+          "nombre": "Anillo de Luz LED 26cm",
+          "categoria": "Creadores de Contenido",
+          "precio": 49.99,
+          "similitud": 0.6434
+        }
+      ]
+    },
+    "34": {
+      "nombre": "Control Remoto para Presentaciones",
+      "categoria": "Creadores de Contenido",
+      "recomendados": [
+        {
+          "productoId": 28,
+          "nombre": "WebCam HD",
+          "categoria": "Workstation",
+          "precio": 44.99,
+          "similitud": 0.8262
+        },
+        {
+          "productoId": 2,
+          "nombre": "Anillo de Luz LED 26cm",
+          "categoria": "Creadores de Contenido",
+          "precio": 49.99,
+          "similitud": 0.7675
+        },
+        {
+          "productoId": 3,
+          "nombre": "Powerbank 20,000mAh Carga Rápida",
+          "categoria": "Accesorios Móviles",
+          "precio": 89.99,
+          "similitud": 0.7089
+        },
+        {
+          "productoId": 13,
+          "nombre": "Hub USB 4 Puertos",
+          "categoria": "Workstation",
+          "precio": 14.99,
+          "similitud": 0.6795
+        },
+        {
+          "productoId": 11,
+          "nombre": "Silla Ergonómica",
+          "categoria": "Workstation",
+          "precio": 199.99,
+          "similitud": 0.6182
+        }
+      ]
+    },
+    "35": {
+      "nombre": "Banda Deportiva Inteligente",
+      "categoria": "Wearables",
+      "recomendados": [
+        {
+          "productoId": 6,
+          "nombre": "Teclado Mecánico RGB",
+          "categoria": "Gaming",
+          "precio": 189.99,
+          "similitud": 0.5618
+        },
+        {
+          "productoId": 14,
+          "nombre": "Micrófono Condensador",
+          "categoria": "Creadores de Contenido",
+          "precio": 74.99,
+          "similitud": 0.5594
+        },
+        {
+          "productoId": 32,
+          "nombre": "Cargador Inalámbrico 15W",
+          "categoria": "Accesorios Móviles",
+          "precio": 34.99,
+          "similitud": 0.4935
+        },
+        {
+          "productoId": 4,
+          "nombre": "Mouse gamer RGB",
+          "categoria": "Gaming",
+          "precio": 64.99,
+          "similitud": 0.4314
+        },
+        {
+          "productoId": 36,
+          "nombre": "Luz de Fondo LED para Escritorio",
+          "categoria": "Creadores de Contenido",
+          "precio": 27.99,
+          "similitud": 0.415
+        }
+      ]
+    },
+    "36": {
+      "nombre": "Luz de Fondo LED para Escritorio",
+      "categoria": "Creadores de Contenido",
+      "recomendados": [
+        {
+          "productoId": 2,
+          "nombre": "Anillo de Luz LED 26cm",
+          "categoria": "Creadores de Contenido",
+          "precio": 49.99,
+          "similitud": 0.7637
+        },
+        {
+          "productoId": 14,
+          "nombre": "Micrófono Condensador",
+          "categoria": "Creadores de Contenido",
+          "precio": 74.99,
+          "similitud": 0.7075
+        },
+        {
+          "productoId": 15,
+          "nombre": "Smartwatch Deportivo Serie 8",
+          "categoria": "Wearables",
+          "precio": 89.99,
+          "similitud": 0.6908
+        },
+        {
+          "productoId": 34,
+          "nombre": "Control Remoto para Presentaciones",
+          "categoria": "Creadores de Contenido",
+          "precio": 19.99,
+          "similitud": 0.6167
+        },
+        {
+          "productoId": 8,
+          "nombre": "Trípode Ajustable + Soporte de Celular",
+          "categoria": "Creadores de Contenido",
+          "precio": 54.99,
+          "similitud": 0.602
+        }
+      ]
+    }
+  }
+}

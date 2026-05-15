@@ -9,6 +9,8 @@ import PrivateRoute from './components/PrivateRoute';
 import Registro from './pages/Registro';
 import Admin from './pages/Admin';
 import Support from './pages/Support';
+import Dashboard from './pages/Dashboard';
+import ProductDetail from './pages/ProductDetail';
 
 
 export default function App() {
@@ -19,7 +21,7 @@ export default function App() {
       <Route path="/" element={<Home />} />
       <Route path="/carrito" element={<Cart />} />
       <Route path="/success" element={<Success />} />
-  <Route path="/support" element={<Support />} />
+      <Route path="/support" element={<Support />} />
 
       {/* Rutas privadas */}
       <Route path="/pedidos" element={
@@ -30,6 +32,16 @@ export default function App() {
       <Route path="/admin" element={
         <PrivateRoute>
           <Admin />
+        </PrivateRoute>
+      } />
+      <Route path="/dashboard" element={
+        <PrivateRoute>
+          <Dashboard />
+        </PrivateRoute>
+      } />
+      <Route path="/producto/:id" element={
+        <PrivateRoute>
+          <ProductDetail />
         </PrivateRoute>
       } />
       <Route path="/registro" element={<Registro />} />

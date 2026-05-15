@@ -11,6 +11,7 @@ const authRoutes = require('./routes/authRoutes');
 const pagoRoutes = require('./routes/pagoRoutes');
 const productoRoutes = require('./routes/productoRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const recomendacionesRoutes = require('./routes/recomendacionesRoutes');
 
 const app = express();
 
@@ -26,5 +27,6 @@ app.use('/api/productos', productoRoutes);
 app.use('/api/admin', adminRoutes);
 // Rutas de soporte (FAQ / mensajes)
 app.use('/api/support', require('./routes/supportRoutes'));
+app.use('/api/recomendaciones', recomendacionesRoutes);
 
 module.exports = app;

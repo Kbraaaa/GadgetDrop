@@ -1,6 +1,40 @@
 import { useState } from 'react';
 import Navbar from '../components/Navbar';
 import { useToast } from '../components/Toast';
+import { API_URL } from '../config';
+import { HelpCircle, MessageSquare, ChevronDown, ChevronUp, Send, Loader2 } from 'lucide-react';
+
+const faqs = [
+  { q: '¿Cómo veo mis pedidos?', a: 'Ve a Mis Pedidos en el menú y podrás ver el historial completo y el estado de cada pedido.' },
+  { q: '¿Puedo cancelar un pedido?', a: 'Si el pedido aún está en estado pendiente, contacta a soporte con tu número de pedido y lo gestionaremos.' },
+  { q: '¿Cuánto tarda el envío?', a: 'Los tiempos de envío varían según la ubicación. Normalmente entre 3 y 7 días hábiles.' },
+  { q: '¿Cómo cambio mi dirección de envío?', a: 'Contacta a soporte con la dirección nueva antes de que el pedido sea enviado y lo actualizaremos.' },
+];
+
+function FAQItem({ q, a }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className={`bg-white border rounded-2xl overflow-hidden transition-all ${open ? 'border-blue-200 shadow-sm' : 'border-slate-100'}`}>
+      <button
+        className="w-full flex items-center justify-between px-5 py-4 text-left gap-3"
+        onClick={() => setOpen(!open)}
+      >
+        <span className="font-medium text-slate-800 text-sm">{q}</span>
+        {open
+          ? <ChevronUp className="w-4 h-4 text-blue-500 flex-shrink-0" />
+          : <ChevronDown className="w-4 h-4 text-slate-400 flex-shrink-0" />
+        }
+      </button>
+      {open && (
+        <div className="px-5 pb-4">
+          <p className="text-sm text-slate-500 leading-relaxed border-t border-slate-100 pt-3">{a}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+const inputCls = "w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition bg-white placeholder-slate-300";
 
 export default function Support() {
   const [nombre, setNombre] = useState('');
@@ -10,13 +44,6 @@ export default function Support() {
   const [loading, setLoading] = useState(false);
   const { addToast } = useToast();
 
-  const faqs = [
-    { q: '¿Cómo veo mis pedidos?', a: 'Ve a Mis Pedidos (Menú) y podrás ver el historial y el estado de cada pedido.' },
-    { q: '¿Puedo cancelar un pedido?', a: 'Si el pedido aún está en estado pendiente, contacta a soporte con tu número de pedido.' },
-    { q: '¿Cuánto tarda el envío?', a: 'Los tiempos de envío varían según la ubicación. Normalmente 3-7 días hábiles.' },
-    { q: '¿Cómo cambio mi dirección?', a: 'Edita tu perfil o contacta a soporte con la dirección nueva antes de que el pedido sea enviado.' }
-  ];
-
   async function handleSubmit(e) {
     e.preventDefault();
     if (!nombre || !correo || !mensaje) {
@@ -25,17 +52,16 @@ export default function Support() {
     }
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/support/message', {
+      const res = await fetch(`${API_URL}/api/support/message`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nombre, correo, asunto, mensaje })
+        body: JSON.stringify({ nombre, correo, asunto, mensaje }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Error al enviar mensaje');
       addToast({ type: 'success', title: 'Soporte', message: 'Mensaje enviado. Te responderemos pronto.' });
       setNombre(''); setCorreo(''); setAsunto(''); setMensaje('');
     } catch (err) {
-      console.error(err);
       addToast({ type: 'error', title: 'Soporte', message: err.message || 'Error al enviar mensaje' });
     } finally {
       setLoading(false);
@@ -45,44 +71,104 @@ export default function Support() {
   return (
     <>
       <Navbar />
-      <div className="max-w-5xl mx-auto p-6 md:p-12">
-        <h1 className="text-3xl font-bold mb-6">Soporte & FAQ</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
-            <h2 className="text-2xl font-semibold mb-4">Preguntas frecuentes</h2>
-            <div className="space-y-4">
-              {faqs.map((f, i) => (
-                <div key={i} className="p-4 bg-white rounded-lg shadow-sm">
-                  <p className="font-medium">{f.q}</p>
-                  <p className="text-sm text-slate-600 mt-1">{f.a}</p>
-                </div>
-              ))}
-            </div>
+      <div className="min-h-screen bg-gray-50">
+        {/* Hero */}
+        <div className="bg-gradient-to-br from-slate-800 to-slate-900 text-white py-12 px-6 text-center">
+          <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-blue-200 text-xs font-semibold px-4 py-1.5 rounded-full mb-4">
+            <HelpCircle className="w-3.5 h-3.5" />
+            Centro de ayuda
           </div>
+          <h1 className="text-3xl sm:text-4xl font-extrabold mb-3">¿En qué podemos ayudarte?</h1>
+          <p className="text-slate-300 max-w-md mx-auto text-sm">
+            Consulta las preguntas frecuentes o envíanos un mensaje directo y te responderemos pronto.
+          </p>
+        </div>
 
-          <div>
-            <h2 className="text-2xl font-semibold mb-4">Contacta al soporte</h2>
-            <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-lg shadow-sm">
-              <div>
-                <label className="block text-sm font-medium mb-1">Nombre</label>
-                <input value={nombre} onChange={e=>setNombre(e.target.value)} className="w-full px-3 py-2 border rounded" />
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            {/* FAQ */}
+            <div>
+              <div className="flex items-center gap-2 mb-5">
+                <HelpCircle className="w-5 h-5 text-blue-500" />
+                <h2 className="text-xl font-bold text-slate-800">Preguntas frecuentes</h2>
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Correo</label>
-                <input value={correo} onChange={e=>setCorreo(e.target.value)} type="email" className="w-full px-3 py-2 border rounded" />
+              <div className="space-y-3">
+                {faqs.map((f, i) => <FAQItem key={i} q={f.q} a={f.a} />)}
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Asunto (opcional)</label>
-                <input value={asunto} onChange={e=>setAsunto(e.target.value)} className="w-full px-3 py-2 border rounded" />
+            </div>
+
+            {/* Contact form */}
+            <div>
+              <div className="flex items-center gap-2 mb-5">
+                <MessageSquare className="w-5 h-5 text-blue-500" />
+                <h2 className="text-xl font-bold text-slate-800">Contacta al soporte</h2>
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Mensaje</label>
-                <textarea value={mensaje} onChange={e=>setMensaje(e.target.value)} rows={6} className="w-full px-3 py-2 border rounded" />
+              <div className="bg-white border border-slate-100 rounded-2xl shadow-sm p-6">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+                        Nombre <span className="text-red-400">*</span>
+                      </label>
+                      <input
+                        value={nombre}
+                        onChange={e => setNombre(e.target.value)}
+                        className={inputCls}
+                        placeholder="Tu nombre"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+                        Correo <span className="text-red-400">*</span>
+                      </label>
+                      <input
+                        value={correo}
+                        onChange={e => setCorreo(e.target.value)}
+                        type="email"
+                        className={inputCls}
+                        placeholder="tu@correo.com"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+                      Asunto <span className="text-slate-300">(opcional)</span>
+                    </label>
+                    <input
+                      value={asunto}
+                      onChange={e => setAsunto(e.target.value)}
+                      className={inputCls}
+                      placeholder="¿Sobre qué trata tu mensaje?"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+                      Mensaje <span className="text-red-400">*</span>
+                    </label>
+                    <textarea
+                      value={mensaje}
+                      onChange={e => setMensaje(e.target.value)}
+                      rows={5}
+                      className={`${inputCls} resize-none`}
+                      placeholder="Describe tu consulta con el mayor detalle posible..."
+                      required
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl shadow-sm shadow-blue-200 transition"
+                  >
+                    {loading
+                      ? <><Loader2 className="w-4 h-4 animate-spin" /> Enviando...</>
+                      : <><Send className="w-4 h-4" /> Enviar mensaje</>
+                    }
+                  </button>
+                </form>
               </div>
-              <div>
-                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded" disabled={loading}>{loading? 'Enviando...':'Enviar mensaje'}</button>
-              </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>

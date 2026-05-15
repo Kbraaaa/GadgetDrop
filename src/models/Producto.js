@@ -22,6 +22,10 @@ const Producto = sequelize.define('Producto', {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0
+    },
+    categoria: {
+        type: DataTypes.STRING,
+        allowNull: true
     }
 }, {
     tableName: 'productos',

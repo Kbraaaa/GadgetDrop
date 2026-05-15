@@ -21,12 +21,13 @@ const crearSesionPago = async (req, res) => {
             quantity: item.cantidad
         }));
 
+        const frontendUrl = process.env.FRONTEND_URL ?? 'http://localhost:5173';
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
             line_items,
             mode: 'payment',
-            success_url: 'http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}',
-            cancel_url: 'http://localhost:5173/cart',
+            success_url: `${frontendUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${frontendUrl}/cart`,
             metadata: { usuarioId }
         });
 

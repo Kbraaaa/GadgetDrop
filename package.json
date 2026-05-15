@@ -23,6 +23,7 @@
     "nodemailer": "^6.9.4",
     "pg": "^8.16.0",
     "pg-hstore": "^2.3.4",
+    "python-shell": "^5.0.0",
     "sequelize": "^6.37.7",
     "stripe": "^18.1.1"
   },
