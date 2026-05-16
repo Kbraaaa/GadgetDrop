@@ -9,8 +9,9 @@ export default function Success() {
 
   useEffect(() => {
     const guardarPedido = async () => {
-      const usuario = JSON.parse(localStorage.getItem('usuario')) || {};
-      if (!usuario.id) return;
+      const usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
+      const token = localStorage.getItem('token');
+      if (!usuario?.id) return;
 
       const params = new URLSearchParams(window.location.search);
       const sessionId = params.get('session_id');
@@ -30,7 +31,10 @@ export default function Success() {
 
         const res = await fetch(`${API_URL}/api/pedidos/pagado`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
           body: JSON.stringify(payload),
         });
 

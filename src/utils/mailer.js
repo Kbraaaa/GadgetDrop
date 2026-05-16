@@ -99,23 +99,38 @@ function loadTemplate(templateName) {
     }
 }
 
-async function sendOrderConfirmation(to, order, items) {
-    const subject = `Confirmación de pedido #${order.id}`;
+async function sendOrderConfirmation(to, datos) {
+    try {
+        const subject = `Confirmación de pedido #${datos.pedidoId}`;
 
-    // Try handlebars template first
-    const tpl = loadTemplate('order-confirmation');
-    if (tpl) {
-        const html = tpl({ order, items, total: Number(order.total).toFixed(2), date: new Date(order.createdAt || Date.now()).toLocaleString() });
-        const textLines = [`Pedido #${order.id}`, `Total: $${Number(order.total).toFixed(2)}`, `Fecha: ${new Date(order.createdAt || Date.now()).toLocaleString()}`];
-        items.forEach(i => textLines.push(`${i.nombre} x${i.cantidad} - $${Number(i.precioUnitario).toFixed(2)}`));
-        const text = textLines.join('\n');
-        return sendMail({ to, subject, html, text });
+        const tpl = loadTemplate('order-confirmation');
+        if (tpl) {
+            const html = tpl(datos);
+            const textLines = [
+                `Pedido #${datos.pedidoId}`,
+                `Estado: ${datos.estado}`,
+                `Total: $${datos.total}`,
+                `Fecha: ${datos.fecha}`
+            ];
+            (datos.items || []).forEach(i =>
+                textLines.push(`${i.nombre} x${i.cantidad} - $${i.precioUnitario} (subtotal: $${i.subtotal})`)
+            );
+            return await sendMail({ to, subject, html, text: textLines.join('\n') });
+        }
+
+        // Fallback to inline renderer
+        const html = renderOrderHtml(
+            { id: datos.pedidoId, total: datos.total, createdAt: null },
+            datos.items || []
+        );
+        const text = `Tu pedido #${datos.pedidoId} fue recibido. Total: $${datos.total}`;
+        return await sendMail({ to, subject, html, text });
+    } catch (error) {
+        console.error('ERROR enviando correo:', error.message);
+        console.error('Destinatario:', to);
+        console.error('Stack:', error.stack);
+        throw error;
     }
-
-    // Fallback to inline renderer
-    const html = renderOrderHtml(order, items);
-    const text = `Tu pedido #${order.id} fue recibido. Total: $${Number(order.total).toFixed(2)}`;
-    return sendMail({ to, subject, html, text });
 }
 
 module.exports = {

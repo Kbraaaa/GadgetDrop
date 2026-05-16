@@ -29,17 +29,22 @@ describe('mailer.sendOrderConfirmation', () => {
     test('should call sendMail with rendered HTML (uses handlebars template)', async () => {
         const mailer = require('./mailer');
 
-        const order = { id: 42, total: 99.9, createdAt: Date.now() };
-        const items = [{ nombre: 'Producto Test', cantidad: 2, precioUnitario: 49.95 }];
+        const datos = {
+            pedidoId: 42,
+            total: '99.90',
+            estado: 'Pendiente',
+            fecha: '15 de mayo de 2026',
+            nombre: 'Test User',
+            items: [{ nombre: 'Producto Test', cantidad: 2, precioUnitario: '49.95', subtotal: '99.90' }],
+        };
 
-        await expect(mailer.sendOrderConfirmation('to@example.com', order, items)).resolves.toBeDefined();
+        await expect(mailer.sendOrderConfirmation('to@example.com', datos)).resolves.toBeDefined();
 
         expect(sendMailMock).toHaveBeenCalledTimes(1);
         const sent = sendMailMock.mock.calls[0][0];
         expect(sent.to).toBe('to@example.com');
-        expect(sent.subject).toContain(`#${order.id}`);
-        // The template or fallback should include product name and order id
+        expect(sent.subject).toContain(`#${datos.pedidoId}`);
         expect(sent.html).toEqual(expect.stringContaining('Producto Test'));
-        expect(sent.html).toEqual(expect.stringContaining(`pedido #${order.id}`.replace('#', '#')));
+        expect(sent.html).toEqual(expect.stringContaining(`#${datos.pedidoId}`));
     });
 });

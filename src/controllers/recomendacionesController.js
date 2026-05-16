@@ -65,4 +65,30 @@ const getRecomendacionesPorNombre = async (req, res) => {
     }
 };
 
-module.exports = { getRecomendaciones, getRecomendacionesPorNombre };
+const getPrediccionDemanda = async (req, res) => {
+    try {
+        const args = req.params.productoId ? [req.params.productoId] : [];
+        const options = {
+            mode: 'text',
+            pythonPath: 'python',
+            pythonOptions: ['-u'],
+            scriptPath,
+            args,
+            env: { ...process.env, PYTHONIOENCODING: 'utf-8' },
+        };
+        const results = await PythonShell.run('prediccion_demanda.py', options);
+        if (!results || results.length === 0) {
+            throw new Error('El script Python no retornó ningún resultado');
+        }
+        const data = JSON.parse(results[0]);
+        if (data.error) {
+            return res.status(500).json(data);
+        }
+        return res.status(200).json(data);
+    } catch (err) {
+        console.error('❌ Error al ejecutar predicción de demanda:', err);
+        return res.status(500).json({ error: 'Error interno al generar predicción de demanda' });
+    }
+};
+
+module.exports = { getRecomendaciones, getRecomendacionesPorNombre, getPrediccionDemanda };

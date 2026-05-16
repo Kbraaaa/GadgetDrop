@@ -26,7 +26,7 @@ const actualizaciones = [
     { id: 11, nombre: 'Juan GadgetDrop',               correo: 'juan@gadgetdrop.com'  },
     { id: 17, nombre: 'Juan Camilo Díaz',              correo: 'jcdiaz@hotmail.com'   },
     { id: 22, nombre: 'Administrador GadgetDrop',      correo: 'admin@gadgetdrop.com' },
-    { id: 27, nombre: 'Juan Diego Portilla Riveros',   correo: 'jdportilla@gmail.com' },
+    { id: 27, nombre: 'Juan Diego Portilla Riveros',   correo: 'juandiegoportilla84@gmail.com' },
     { id: 28, nombre: 'Andrés Villalba',               correo: 'avillalba@gmail.com'  },
     { id: 29, nombre: 'Melissa Cardona',               correo: 'mcardona@gmail.com'   },
 ];

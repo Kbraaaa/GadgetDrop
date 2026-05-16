@@ -52,6 +52,8 @@ export default function Dashboard() {
   const [loadingPedidos, setLoadingPedidos] = useState(true);
   const [loadingProductos, setLoadingProductos] = useState(true);
   const [selectedProductoId, setSelectedProductoId] = useState('');
+  const [demanda, setDemanda] = useState(null);
+  const [loadingDemanda, setLoadingDemanda] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -69,6 +71,14 @@ export default function Dashboard() {
       .then(data => setProductos(Array.isArray(data) ? data : []))
       .catch(() => {})
       .finally(() => setLoadingProductos(false));
+
+    fetch(`${API_URL}/api/recomendaciones/demanda`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then(r => r.json())
+      .then(data => setDemanda(data && !data.error ? data : null))
+      .catch(() => {})
+      .finally(() => setLoadingDemanda(false));
   }, []);
 
   // ── KPIs ────────────────────────────────────────────────────────────────────
@@ -133,6 +143,24 @@ export default function Dashboard() {
   }));
 
   const fmt$ = v => `$${Number(v).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+  // ── Predicción de demanda ────────────────────────────────────────────────────
+  const mesesPredichos = demanda?.meses_predichos || ['Mes 1', 'Mes 2', 'Mes 3'];
+  const topDemanda = (demanda?.predicciones || [])
+    .sort((a, b) => b.total_predicho_3m - a.total_predicho_3m)
+    .slice(0, 8)
+    .map(p => ({
+      nombre: p.nombre.length > 15 ? p.nombre.slice(0, 14) + '…' : p.nombre,
+      mes1: p.prediccion_mes1,
+      mes2: p.prediccion_mes2,
+      mes3: p.prediccion_mes3,
+    }));
+  const alertas = (demanda?.predicciones || [])
+    .filter(p => p.alerta_restock)
+    .sort((a, b) => {
+      if (a.nivel_alerta !== b.nivel_alerta) return a.nivel_alerta === 'critico' ? -1 : 1;
+      return a.dias_restock - b.dias_restock;
+    });
 
   return (
     <>
@@ -433,6 +461,109 @@ export default function Dashboard() {
                 )}
               </div>
             </div>
+          </Card>
+
+          {/* ── Predicción de Demanda ───────────────────────────────────────── */}
+          <Card>
+            <SectionTitle
+              icon={BarChart2}
+              title="Predicción de Demanda — Próximos 3 Meses"
+              subtitle="Modelo de Regresión Lineal · scikit-learn"
+            />
+
+            {loadingDemanda ? (
+              <div className="space-y-4">
+                <Skeleton h="h-72" />
+                <Skeleton h="h-40" />
+              </div>
+            ) : (
+              <div className="space-y-8">
+                {topDemanda.length === 0 ? (
+                  <p className="text-slate-400 text-sm text-center py-20">
+                    Sin datos suficientes — se requieren al menos 3 meses de historial por producto
+                  </p>
+                ) : (
+                  <>
+                    <p className="text-xs text-slate-500">
+                      Top {topDemanda.length} productos por demanda predicha · {mesesPredichos.join(', ')}
+                    </p>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={topDemanda} margin={{ top: 4, right: 16, left: 0, bottom: 48 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                        <XAxis
+                          dataKey="nombre"
+                          tick={{ fontSize: 10 }}
+                          angle={-30}
+                          textAnchor="end"
+                          interval={0}
+                        />
+                        <YAxis
+                          tick={{ fontSize: 11 }}
+                          allowDecimals={false}
+                          label={{ value: 'Unidades', angle: -90, position: 'insideLeft', offset: 10, style: { fontSize: 11, fill: '#94a3b8' } }}
+                        />
+                        <Tooltip />
+                        <Legend verticalAlign="top" />
+                        <Bar dataKey="mes1" name={mesesPredichos[0]} fill="#6366f1" radius={[4, 4, 0, 0]} />
+                        <Bar dataKey="mes2" name={mesesPredichos[1]} fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+                        <Bar dataKey="mes3" name={mesesPredichos[2]} fill="#a78bfa" radius={[4, 4, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </>
+                )}
+
+                {alertas.length === 0 ? (
+                  <div className="bg-green-50 border border-green-100 rounded-xl p-4 text-center text-sm text-green-700">
+                    ✅ Todos los productos tienen stock suficiente para los próximos 3 meses
+                  </div>
+                ) : (
+                  <div>
+                    <h3 className="text-sm font-semibold text-slate-700 mb-3">Alertas de Restock</h3>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="bg-slate-50 text-slate-500 text-xs uppercase tracking-wide">
+                            <th className="text-left px-3 py-2.5 rounded-tl-lg">Producto</th>
+                            <th className="text-left px-3 py-2.5">Categoría</th>
+                            <th className="text-right px-3 py-2.5">Stock actual</th>
+                            <th className="text-right px-3 py-2.5">Demanda 3 meses</th>
+                            <th className="text-center px-3 py-2.5">Nivel</th>
+                            <th className="text-right px-3 py-2.5 rounded-tr-lg">Días de stock</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          {alertas.map(p => (
+                            <tr key={p.productoId} className="hover:bg-slate-50 transition-colors">
+                              <td className="px-3 py-2.5 font-medium text-slate-800">{p.nombre}</td>
+                              <td className="px-3 py-2.5">
+                                <span
+                                  className="inline-block px-2 py-0.5 rounded-full text-xs font-semibold"
+                                  style={{
+                                    background: (CAT_COLORS[p.categoria] || '#6366f1') + '20',
+                                    color: CAT_COLORS[p.categoria] || '#6366f1',
+                                  }}
+                                >
+                                  {p.categoria}
+                                </span>
+                              </td>
+                              <td className="px-3 py-2.5 text-right text-slate-700">{p.stock_actual}</td>
+                              <td className="px-3 py-2.5 text-right text-slate-700">{p.total_predicho_3m}</td>
+                              <td className="px-3 py-2.5 text-center">
+                                {p.nivel_alerta === 'critico'
+                                  ? <span className="inline-block px-2 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-700">🔴 Crítico</span>
+                                  : <span className="inline-block px-2 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-700">🟡 Advertencia</span>
+                                }
+                              </td>
+                              <td className="px-3 py-2.5 text-right text-slate-700">{p.dias_restock}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </Card>
 
         </div>

@@ -1,87 +1,152 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Confirmación de pedido</title>
-  <style>
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      color: #111;
-    }
-
-    .container {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 16px;
-    }
-
-    table {
-      border-collapse: collapse;
-      width: 100%;
-    }
-
-    th,
-    td {
-      padding: 8px;
-      border: 1px solid #eee;
-    }
-
-    th {
-      text-align: left;
-      background: #fafafa;
-    }
-
-    .right {
-      text-align: right;
-    }
-
-    .center {
-      text-align: center;
-    }
-
-    .total {
-      font-weight: 700;
-      margin-top: 12px;
-    }
-
-    .muted {
-      color: #666;
-      font-size: 13px;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirmación de Pedido — GadgetDrop</title>
 </head>
+<body style="margin:0;padding:0;background:#f8fafc;font-family:'Segoe UI',Arial,sans-serif;">
 
-<body>
-  <div class="container">
-    <h2>Confirmación de pedido #{{order.id}}</h2>
-    <p>Gracias por tu compra. Aquí tienes los detalles de tu pedido:</p>
-
-    <table>
-      <thead>
-        <tr>
-          <th>Producto</th>
-          <th class="center">Cantidad</th>
-          <th class="right">Precio unitario</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each items}}
-        <tr>
-          <td>{{this.nombre}}</td>
-          <td class="center">{{this.cantidad}}</td>
-          <td class="right">${{this.precioUnitario}}</td>
-        </tr>
-        {{/each}}
-      </tbody>
-    </table>
-
-    <p class="total">Total: ${{total}}</p>
-    <p class="muted">Fecha del pedido: {{date}}</p>
-    <hr />
-    <p class="muted">GadgetDrop</p>
+  <!-- HEADER -->
+  <div style="background:#1e293b;padding:32px 0;text-align:center;">
+    <span style="font-size:28px;font-weight:bold;color:#facc15;">
+      ⚡ GadgetDrop
+    </span>
+    <p style="color:#94a3b8;margin:8px 0 0;font-size:14px;">
+      Lo último en tecnología
+    </p>
   </div>
-</body>
 
+  <!-- HERO -->
+  <div style="background:#2563eb;padding:32px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:16px;">✅</div>
+    <h1 style="color:#fff;margin:0;font-size:24px;">
+      ¡Pedido confirmado!
+    </h1>
+    <p style="color:#bfdbfe;margin:8px 0 0;font-size:16px;">
+      Gracias por tu compra, {{nombre}}
+    </p>
+  </div>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <div style="max-width:600px;margin:32px auto;padding:0 16px;">
+
+    <!-- INFO DEL PEDIDO -->
+    <div style="background:#fff;border-radius:12px;padding:24px;
+                margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+      <h2 style="margin:0 0 16px;color:#1e293b;font-size:18px;">
+        Detalles del pedido
+      </h2>
+      <table style="width:100%;border-collapse:collapse;">
+        <tr>
+          <td style="padding:8px 0;color:#64748b;font-size:14px;">
+            Número de pedido
+          </td>
+          <td style="padding:8px 0;color:#1e293b;font-weight:bold;
+                     text-align:right;font-size:14px;">
+            #{{pedidoId}}
+          </td>
+        </tr>
+        <tr style="border-top:1px solid #f1f5f9;">
+          <td style="padding:8px 0;color:#64748b;font-size:14px;">
+            Estado
+          </td>
+          <td style="padding:8px 0;text-align:right;">
+            <span style="background:#dcfce7;color:#16a34a;padding:4px 12px;
+                         border-radius:999px;font-size:13px;font-weight:600;">
+              {{estado}}
+            </span>
+          </td>
+        </tr>
+        <tr style="border-top:1px solid #f1f5f9;">
+          <td style="padding:8px 0;color:#64748b;font-size:14px;">
+            Fecha
+          </td>
+          <td style="padding:8px 0;color:#1e293b;text-align:right;
+                     font-size:14px;">
+            {{fecha}}
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- PRODUCTOS -->
+    <div style="background:#fff;border-radius:12px;padding:24px;
+                margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+      <h2 style="margin:0 0 16px;color:#1e293b;font-size:18px;">
+        Productos
+      </h2>
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="border-bottom:2px solid #f1f5f9;">
+            <th style="text-align:left;padding:8px 0;color:#64748b;
+                       font-size:13px;font-weight:600;">
+              PRODUCTO
+            </th>
+            <th style="text-align:center;padding:8px 0;color:#64748b;
+                       font-size:13px;font-weight:600;">
+              CANT.
+            </th>
+            <th style="text-align:right;padding:8px 0;color:#64748b;
+                       font-size:13px;font-weight:600;">
+              PRECIO
+            </th>
+            <th style="text-align:right;padding:8px 0;color:#64748b;
+                       font-size:13px;font-weight:600;">
+              SUBTOTAL
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each items}}
+          <tr style="border-bottom:1px solid #f8fafc;">
+            <td style="padding:12px 0;color:#1e293b;font-size:14px;">
+              {{this.nombre}}
+            </td>
+            <td style="padding:12px 0;text-align:center;color:#64748b;
+                       font-size:14px;">
+              {{this.cantidad}}
+            </td>
+            <td style="padding:12px 0;text-align:right;color:#64748b;
+                       font-size:14px;">
+              ${{this.precioUnitario}}
+            </td>
+            <td style="padding:12px 0;text-align:right;color:#1e293b;
+                       font-weight:600;font-size:14px;">
+              ${{this.subtotal}}
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+
+      <!-- TOTAL -->
+      <div style="border-top:2px solid #1e293b;margin-top:16px;
+                  padding-top:16px;text-align:right;">
+        <span style="font-size:20px;font-weight:bold;color:#2563eb;">
+          Total: ${{total}}
+        </span>
+      </div>
+    </div>
+
+    <!-- MENSAJE FINAL -->
+    <div style="background:#eff6ff;border-radius:12px;padding:24px;
+                margin-bottom:24px;text-align:center;">
+      <p style="color:#1e40af;margin:0;font-size:15px;line-height:1.6;">
+        Tu pedido está siendo procesado. Te notificaremos cuando
+        sea enviado. Si tienes alguna duda, contáctanos por soporte.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div style="text-align:center;padding:24px;color:#94a3b8;font-size:13px;">
+    <p style="margin:0;">⚡ GadgetDrop — Lo último en tecnología</p>
+    <p style="margin:8px 0 0;">
+      Este correo fue generado automáticamente, por favor no respondas.
+    </p>
+  </div>
+
+</body>
 </html>

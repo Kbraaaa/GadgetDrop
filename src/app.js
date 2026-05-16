@@ -1,11 +1,8 @@
-// src/app.js
-// Cargar variables de entorno lo antes posible
 require('dotenv').config();
-
-// Cargar variables de entorno lo antes posible para que controladores (ej. Stripe) las vean
 
 const express = require('express');
 const cors = require('cors');
+const { helmetConfig, limitGeneral, speedLimiter, hppConfig, xssConfig } = require('./middlewares/seguridad');
 const carritoRoutes = require('./routes/carritoRoutes');
 const authRoutes = require('./routes/authRoutes');
 const pagoRoutes = require('./routes/pagoRoutes');
@@ -17,6 +14,11 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(helmetConfig);
+app.use(hppConfig);
+app.use(xssConfig);
+app.use(speedLimiter);
+app.use(limitGeneral);
 app.use('/api/pedidos', require('./routes/pedidoRoutes'));
 
 app.use('/api/auth', authRoutes);

@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 const Usuario = require('../models/Usuario');
 const LockHistory = require('../models/LockHistory');
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 // registro
 const registrarUsuario = async (req, res) => {
     try {
@@ -14,6 +16,15 @@ const registrarUsuario = async (req, res) => {
 
         if (!nombre || !correoFinal || !contraseñaFinal) {
             return res.status(400).json({ mensaje: 'Faltan campos obligatorios' });
+        }
+        if (nombre.trim().length < 2 || nombre.trim().length > 50) {
+            return res.status(400).json({ mensaje: 'El nombre debe tener entre 2 y 50 caracteres' });
+        }
+        if (!EMAIL_RE.test(correoFinal)) {
+            return res.status(400).json({ mensaje: 'El correo no tiene un formato válido' });
+        }
+        if (contraseñaFinal.length < 8 || !/\d/.test(contraseñaFinal)) {
+            return res.status(400).json({ mensaje: 'La contraseña debe tener al menos 8 caracteres y un número' });
         }
 
         const existe = await Usuario.findOne({ where: { correo: correoFinal } });
@@ -53,6 +64,12 @@ const loginUsuario = async (req, res) => {
 
         if (!correoFinal || !contraseñaFinal) {
             return res.status(400).json({ mensaje: 'Faltan campos obligatorios' });
+        }
+        if (!EMAIL_RE.test(correoFinal)) {
+            return res.status(400).json({ mensaje: 'El correo no tiene un formato válido' });
+        }
+        if (contraseñaFinal.length < 6) {
+            return res.status(400).json({ mensaje: 'La contraseña debe tener al menos 6 caracteres' });
         }
 
         const usuario = await Usuario.findOne({ where: { correo: correoFinal } });

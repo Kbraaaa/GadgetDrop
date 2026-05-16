@@ -4,6 +4,7 @@ const Carrito = require('../models/Carrito');
 const Producto = require('../models/Producto');
 const Usuario = require('../models/Usuario');
 const mailer = require('../utils/mailer');
+const sequelize = require('../config/db');
 
 const crearPedido = async (req, res) => {
     const { usuarioId, externalId } = req.body;
@@ -16,6 +17,12 @@ const crearPedido = async (req, res) => {
 
         if (!carrito || carrito.length === 0) {
             return res.status(400).json({ error: 'El carrito está vacío' });
+        }
+
+        for (const item of carrito) {
+            if (item.Producto.stock < item.cantidad) {
+                return res.status(400).json({ error: `Stock insuficiente para: ${item.Producto.nombre}` });
+            }
         }
 
         const total = carrito.reduce((sum, item) => {
@@ -64,34 +71,62 @@ const crearPedido = async (req, res) => {
             } else break;
         }
 
-        const nuevoPedido = await Pedido.create({
-            usuarioId,
-            externalId: externalId || null,
-            total,
-            pagado: false
-        });
+        let nuevoPedido;
+        const t = await sequelize.transaction();
+        try {
+            nuevoPedido = await Pedido.create({
+                usuarioId,
+                externalId: externalId || null,
+                total,
+                pagado: false
+            }, { transaction: t });
 
-        for (const item of carrito) {
-            await DetallePedido.create({
-                pedidoId: nuevoPedido.id,
-                productoId: item.Producto.id,
-                cantidad: item.cantidad,
-                precioUnitario: item.Producto.precio
-            });
+            for (const item of carrito) {
+                await DetallePedido.create({
+                    pedidoId: nuevoPedido.id,
+                    productoId: item.Producto.id,
+                    cantidad: item.cantidad,
+                    precioUnitario: item.Producto.precio
+                }, { transaction: t });
+
+                await Producto.decrement('stock', {
+                    by: item.cantidad,
+                    where: { id: item.Producto.id },
+                    transaction: t,
+                });
+            }
+
+            await Carrito.destroy({ where: { usuarioId }, transaction: t });
+            await t.commit();
+        } catch (txErr) {
+            await t.rollback();
+            throw txErr;
         }
 
-        await Carrito.destroy({ where: { usuarioId } });
-
         // Enviar correo de confirmación al comprador (no bloquear respuesta en caso de error)
-        (async () => {
+        ;(async () => {
             try {
                 const usuario = await Usuario.findByPk(usuarioId);
                 if (usuario && usuario.correo) {
-                    const items = carrito.map(i => ({ nombre: i.Producto.nombre, cantidad: i.cantidad, precioUnitario: i.Producto.precio }));
-                    await mailer.sendOrderConfirmation(usuario.correo, nuevoPedido, items);
+                    const fecha = new Date(nuevoPedido.createdAt || Date.now())
+                        .toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+                    const items = carrito.map(i => ({
+                        nombre: i.Producto.nombre,
+                        cantidad: i.cantidad,
+                        precioUnitario: Number(i.Producto.precio).toFixed(2),
+                        subtotal: (i.cantidad * Number(i.Producto.precio)).toFixed(2)
+                    }));
+                    await mailer.sendOrderConfirmation(usuario.correo, {
+                        pedidoId: nuevoPedido.id,
+                        nombre: usuario.nombre,
+                        estado: nuevoPedido.estado || 'Pendiente',
+                        fecha,
+                        items,
+                        total: Number(nuevoPedido.total).toFixed(2)
+                    });
                 }
-            } catch (e) {
-                console.error('Error enviando email de confirmación:', e);
+            } catch (err) {
+                console.error('Fallo envío correo:', err.message);
             }
         })();
 
@@ -150,38 +185,80 @@ const crearPedidoDesdeStripe = async (req, res) => {
             if (existente) return res.json({ mensaje: 'Pedido ya registrado', pedidoId: existente.id });
         }
 
+        const productoIds = carrito.map(item => item.Producto?.id || item.productoId);
+        const productosEnBD = await Producto.findAll({ where: { id: productoIds } });
+        const stockMap = {};
+        for (const p of productosEnBD) stockMap[p.id] = p;
+
+        for (const item of carrito) {
+            const prodId = item.Producto?.id || item.productoId;
+            const prod = stockMap[prodId];
+            if (!prod || prod.stock < item.cantidad) {
+                return res.status(400).json({ error: `Stock insuficiente para: ${item.Producto?.nombre || prod?.nombre || 'producto'}` });
+            }
+        }
+
         const total = carrito.reduce((sum, item) => {
             return sum + item.cantidad * parseFloat(item.Producto.precio);
         }, 0);
 
-        const nuevoPedido = await Pedido.create({
-            usuarioId,
-            externalId: externalId || null,
-            total,
-            pagado: true
-        });
+        let nuevoPedido;
+        const t = await sequelize.transaction();
+        try {
+            nuevoPedido = await Pedido.create({
+                usuarioId,
+                externalId: externalId || null,
+                total,
+                pagado: true
+            }, { transaction: t });
 
-        for (const item of carrito) {
-            await DetallePedido.create({
-                pedidoId: nuevoPedido.id,
-                productoId: item.Producto.id,
-                cantidad: item.cantidad,
-                precioUnitario: item.Producto.precio
-            });
+            for (const item of carrito) {
+                await DetallePedido.create({
+                    pedidoId: nuevoPedido.id,
+                    productoId: item.Producto.id,
+                    cantidad: item.cantidad,
+                    precioUnitario: item.Producto.precio
+                }, { transaction: t });
+
+                await Producto.decrement('stock', {
+                    by: item.cantidad,
+                    where: { id: item.Producto.id },
+                    transaction: t,
+                });
+            }
+
+            await Carrito.destroy({ where: { usuarioId }, transaction: t });
+            await t.commit();
+        } catch (txErr) {
+            await t.rollback();
+            throw txErr;
         }
 
-        await Carrito.destroy({ where: { usuarioId } });
-
         // Enviar correo de confirmación al comprador (no bloquear respuesta en caso de error)
-        (async () => {
+        ;(async () => {
             try {
                 const usuario = await Usuario.findByPk(usuarioId);
+                console.log('=== Intentando enviar correo a:', usuario?.correo);
                 if (usuario && usuario.correo) {
-                    const items = (carrito || []).map(i => ({ nombre: i.Producto.nombre, cantidad: i.cantidad, precioUnitario: i.Producto.precio }));
-                    await mailer.sendOrderConfirmation(usuario.correo, nuevoPedido, items);
+                    const fecha = new Date(nuevoPedido.createdAt || Date.now())
+                        .toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+                    const items = (carrito || []).map(i => ({
+                        nombre: i.Producto.nombre,
+                        cantidad: i.cantidad,
+                        precioUnitario: Number(i.Producto.precio).toFixed(2),
+                        subtotal: (i.cantidad * Number(i.Producto.precio)).toFixed(2)
+                    }));
+                    await mailer.sendOrderConfirmation(usuario.correo, {
+                        pedidoId: nuevoPedido.id,
+                        nombre: usuario.nombre,
+                        estado: nuevoPedido.estado || 'Pagado',
+                        fecha,
+                        items,
+                        total: Number(nuevoPedido.total).toFixed(2)
+                    });
                 }
-            } catch (e) {
-                console.error('Error enviando email de confirmación:', e);
+            } catch (err) {
+                console.error('Fallo envío correo:', err.message);
             }
         })();
 
