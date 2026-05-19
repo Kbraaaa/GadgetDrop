@@ -11,8 +11,6 @@ import Admin from './pages/Admin';
 import Support from './pages/Support';
 import Dashboard from './pages/Dashboard';
 import ProductDetail from './pages/ProductDetail';
-
-
 export default function App() {
   return (
     <Routes>

@@ -25,9 +25,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/carrito', carritoRoutes);
 app.use('/api/pago', pagoRoutes);
 app.use('/api/productos', productoRoutes);
-// Rutas para administración (panel admin)
 app.use('/api/admin', adminRoutes);
-// Rutas de soporte (FAQ / mensajes)
 app.use('/api/support', require('./routes/supportRoutes'));
 app.use('/api/recomendaciones', recomendacionesRoutes);
 

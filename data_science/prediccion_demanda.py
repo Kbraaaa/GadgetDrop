@@ -117,7 +117,7 @@ def main():
         total_predicho = sum(preds)
         alerta_restock = bool(stock < total_predicho)
 
-        dias_restock = round((stock / promedio_mensual) * 30) if promedio_mensual > 0 else 0
+        dias_restock = round((stock / preds[0]) * 30) if preds[0] > 0 else 9999
 
         if stock < preds[0]:
             nivel_alerta = "critico"
@@ -125,6 +125,8 @@ def main():
             nivel_alerta = "advertencia"
         else:
             nivel_alerta = "ok"
+
+        confianza = "alta" if r2 >= 0.5 else "media" if r2 >= 0.2 else "baja"
 
         predicciones.append({
             "productoId": int(prod_id),
@@ -134,6 +136,7 @@ def main():
             "historico_meses": len(prod_df),
             "promedio_mensual": promedio_mensual,
             "r2_score": round(r2, 4),
+            "confianza": confianza,
             "prediccion_mes1": preds[0],
             "prediccion_mes2": preds[1],
             "prediccion_mes3": preds[2],

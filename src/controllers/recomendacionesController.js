@@ -1,5 +1,6 @@
 const { PythonShell } = require('python-shell');
 const path = require('path');
+const { Op } = require('sequelize');
 const Producto = require('../models/Producto');
 
 const scriptPath = path.join(__dirname, '..', '..', 'data_science');
@@ -12,6 +13,7 @@ async function ejecutarPython(productoId) {
         scriptPath,
         args: [productoId],
         env: { ...process.env, PYTHONIOENCODING: 'utf-8' },
+        timeout: 30000,
     };
 
     const results = await PythonShell.run('modelo_recomendaciones.py', options);
@@ -49,7 +51,9 @@ const getRecomendacionesPorNombre = async (req, res) => {
     }
 
     try {
-        const producto = await Producto.findOne({ where: { nombre: nombre.trim() } });
+        const producto = await Producto.findOne({
+            where: { nombre: { [Op.iLike]: `%${nombre.trim()}%` } },
+        });
         if (!producto) {
             return res.status(404).json({ error: `Producto "${nombre}" no encontrado`, productoId: null });
         }
@@ -75,6 +79,7 @@ const getPrediccionDemanda = async (req, res) => {
             scriptPath,
             args,
             env: { ...process.env, PYTHONIOENCODING: 'utf-8' },
+            timeout: 30000,
         };
         const results = await PythonShell.run('prediccion_demanda.py', options);
         if (!results || results.length === 0) {

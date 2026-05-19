@@ -2,14 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { API_URL } from '../config';
 import { Loader2, AlertCircle } from 'lucide-react';
-
-const CAT_COLORS = {
-  'Gaming': '#6366f1',
-  'Workstation': '#0ea5e9',
-  'Creadores de Contenido': '#f59e0b',
-  'Accesorios Móviles': '#10b981',
-  'Wearables': '#ec4899',
-};
+import CAT_COLORS from '../constants/categorias';
 
 export default function RecomendacionesWidget({ productoId }) {
   const navigate = useNavigate();

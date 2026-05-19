@@ -5,7 +5,6 @@ const LockHistory = require('../models/LockHistory');
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// registro
 const registrarUsuario = async (req, res) => {
     try {
         // Aceptar nombres de campos en español e inglés para compatibilidad con tests
@@ -54,7 +53,6 @@ const registrarUsuario = async (req, res) => {
     }
 };
 
-// login
 const loginUsuario = async (req, res) => {
     try {
         // Aceptar email/password además de correo/contraseña
@@ -77,11 +75,9 @@ const loginUsuario = async (req, res) => {
             return res.status(401).json({ mensaje: 'Correo no registrado' });
         }
 
-        // configuración: número máximo de intentos y minutos de bloqueo
         const MAX_FAILED = Number(process.env.ACCOUNT_MAX_FAILED_ATTEMPTS || 3);
         const LOCK_MINUTES = Number(process.env.ACCOUNT_LOCKOUT_MINUTES || 3);
 
-        // Comprobar si la cuenta está temporalmente bloqueada
         if (usuario.lockUntil && new Date() < new Date(usuario.lockUntil)) {
             const remainMs = new Date(usuario.lockUntil) - new Date();
             const remainSec = Math.ceil(remainMs / 1000);
@@ -90,14 +86,12 @@ const loginUsuario = async (req, res) => {
 
         const esValida = await bcrypt.compare(contraseñaFinal, usuario.contraseña);
         if (!esValida) {
-            // incrementar contador y bloquear si supera el máximo
             usuario.failedLoginAttempts = (usuario.failedLoginAttempts || 0) + 1;
             if (usuario.failedLoginAttempts >= MAX_FAILED) {
                 usuario.lockUntil = new Date(Date.now() + LOCK_MINUTES * 60 * 1000);
                 usuario.failedLoginAttempts = 0; // reset after locking
                 await usuario.save();
 
-                // registrar en el historial de bloqueos
                 try {
                     await LockHistory.create({ usuarioId: usuario.id, failedAttempts: MAX_FAILED, lockUntil: usuario.lockUntil });
                 } catch (e) {
@@ -112,7 +106,6 @@ const loginUsuario = async (req, res) => {
             }
         }
 
-        // reset counters on successful login
         usuario.failedLoginAttempts = 0;
         usuario.lockUntil = null;
         await usuario.save();
@@ -128,7 +121,6 @@ const loginUsuario = async (req, res) => {
             console.error('Error actualizando LockHistory:', e);
         }
 
-        // token
         const token = jwt.sign(
             {
                 id: usuario.id,
@@ -159,6 +151,4 @@ const loginUsuario = async (req, res) => {
 module.exports = {
     registrarUsuario,
     loginUsuario
-
 };
-

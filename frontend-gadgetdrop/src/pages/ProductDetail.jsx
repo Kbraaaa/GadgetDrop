@@ -8,14 +8,7 @@ import {
   ShoppingCart, ArrowLeft, AlertTriangle,
   ChevronRight, Minus, Plus, Sparkles,
 } from 'lucide-react';
-
-const CAT_COLORS = {
-  'Gaming': '#6366f1',
-  'Workstation': '#0ea5e9',
-  'Creadores de Contenido': '#f59e0b',
-  'Accesorios Móviles': '#10b981',
-  'Wearables': '#ec4899',
-};
+import CAT_COLORS from '../constants/categorias';
 
 function SkeletonBlock({ h = 'h-4', w = 'w-full', rounded = 'rounded-xl' }) {
   return <div className={`${h} ${w} ${rounded} bg-slate-100 animate-pulse`} />;
@@ -132,7 +125,6 @@ export default function ProductDetail() {
       <div className="min-h-screen bg-slate-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
 
-          {/* Breadcrumb */}
           <nav className="flex items-center gap-1.5 text-sm text-slate-500 mb-8 flex-wrap">
             <Link to="/" className="hover:text-blue-600 font-medium transition">Inicio</Link>
             <ChevronRight className="w-3.5 h-3.5 flex-shrink-0" />
@@ -143,10 +135,7 @@ export default function ProductDetail() {
             </span>
           </nav>
 
-          {/* Main card */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sm:p-8">
-
-            {/* Left — Image */}
             <div>
               <span
                 className="inline-block text-xs font-semibold text-white px-3 py-1 rounded-full mb-4"
@@ -163,7 +152,6 @@ export default function ProductDetail() {
               </div>
             </div>
 
-            {/* Right — Info */}
             <div className="flex flex-col justify-center space-y-5">
               <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-800 leading-tight">
                 {producto.nombre}
@@ -177,7 +165,6 @@ export default function ProductDetail() {
                 {producto.descripcion}
               </p>
 
-              {/* Stock badge */}
               <div className="text-sm">
                 {stock === 0 ? (
                   <span className="text-red-600 font-semibold">Sin stock disponible</span>
@@ -190,7 +177,6 @@ export default function ProductDetail() {
                 )}
               </div>
 
-              {/* Quantity selector */}
               {stock > 0 && (
                 <div className="flex items-center gap-3">
                   <span className="text-sm font-medium text-slate-700">Cantidad:</span>
@@ -214,7 +200,6 @@ export default function ProductDetail() {
                 </div>
               )}
 
-              {/* Action buttons */}
               <div className="flex flex-col sm:flex-row gap-3 pt-1">
                 <button
                   onClick={agregarAlCarrito}
@@ -235,7 +220,6 @@ export default function ProductDetail() {
             </div>
           </div>
 
-          {/* Recommendations */}
           <div className="mt-6 bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sm:p-8">
             <div className="flex items-start justify-between flex-wrap gap-3 mb-6">
               <div>

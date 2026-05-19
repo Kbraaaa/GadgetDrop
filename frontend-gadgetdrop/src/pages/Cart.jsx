@@ -106,7 +106,6 @@ export default function Cart() {
             </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Items list */}
               <div className="lg:col-span-2 space-y-4">
                 {items.map(ci => {
                   const prod = ci.Producto;
@@ -164,7 +163,6 @@ export default function Cart() {
                 })}
               </div>
 
-              {/* Order summary */}
               <div className="lg:col-span-1">
                 <div className="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm sticky top-20">
                   <h3 className="font-bold text-slate-800 mb-4 text-base">Resumen del pedido</h3>

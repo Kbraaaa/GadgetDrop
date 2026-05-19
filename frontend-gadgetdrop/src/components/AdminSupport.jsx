@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useToast } from './Toast';
 import { API_URL } from '../config';
 import { MessageSquare, X, Mail, Clock, CheckCircle, AlertTriangle, Send } from 'lucide-react';
@@ -46,11 +46,24 @@ export default function AdminSupport() {
       const res = await fetch(`${API_URL}/api/admin/support/${selected.id}/reply`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ reply, close: false })
+        body: JSON.stringify({ reply, close: false }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Error al responder');
-      addToast({ type: 'success', title: 'Soporte', message: 'Respuesta enviada' });
+      if (data.emailEnviado) {
+        addToast({ type: 'success', title: 'Soporte', message: 'Respuesta enviada correctamente' });
+      } else {
+        addToast({ type: 'warning', title: 'Soporte', message: 'Respuesta guardada pero el correo no pudo enviarse al usuario' });
+      }
+      const newReply = { text: reply, at: new Date().toISOString(), emailEnviado: data.emailEnviado };
+      setSelected(prev => ({
+        ...prev,
+        metadata: {
+          ...(prev.metadata || {}),
+          replies: [...((prev.metadata?.replies) || []), newReply],
+          lastReply: newReply,
+        },
+      }));
       setReply('');
       fetchMensajes();
     } catch (e) {
@@ -81,13 +94,11 @@ export default function AdminSupport() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div>
         <h2 className="text-xl font-bold text-slate-800">Soporte al cliente</h2>
         <p className="text-sm text-slate-500 mt-0.5">Responde y gestiona tickets de soporte</p>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
         <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
           <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">Total tickets</p>
@@ -103,7 +114,6 @@ export default function AdminSupport() {
         </div>
       </div>
 
-      {/* Messages list */}
       {mensajes.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <MessageSquare className="w-14 h-14 text-slate-200 mb-4" />
@@ -150,7 +160,6 @@ export default function AdminSupport() {
         </div>
       )}
 
-      {/* Modal */}
       {modalVisible && selected && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
@@ -158,7 +167,6 @@ export default function AdminSupport() {
             onClick={closeModalAnimated}
           />
           <div className={`bg-white rounded-2xl shadow-2xl max-w-2xl w-full z-10 overflow-hidden transform transition-all duration-300 ${animating ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 -translate-y-4 scale-95'}`}>
-            {/* Modal header */}
             <div className="flex items-start justify-between px-6 py-5 border-b border-slate-100">
               <div>
                 <h4 className="text-lg font-bold text-slate-800">{selected.asunto || 'Sin asunto'}</h4>
@@ -176,9 +184,7 @@ export default function AdminSupport() {
               </button>
             </div>
 
-            {/* Modal body */}
             <div className="px-6 py-5 space-y-5 max-h-[60vh] overflow-y-auto">
-              {/* Original message */}
               <div>
                 <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">Mensaje del cliente</p>
                 <div className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
@@ -186,7 +192,27 @@ export default function AdminSupport() {
                 </div>
               </div>
 
-              {/* Reply area */}
+              {selected.metadata?.replies?.length > 0 && (
+                <div>
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">
+                    Historial de respuestas ({selected.metadata.replies.length})
+                  </p>
+                  <div className="space-y-3">
+                    {selected.metadata.replies.map((r, i) => (
+                      <div key={i} className="bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm text-slate-700">
+                        <p className="whitespace-pre-wrap leading-relaxed">{r.text}</p>
+                        <div className="flex items-center gap-2 mt-2 text-xs text-slate-400">
+                          <span>{new Date(r.at).toLocaleDateString('es', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                          <span title={r.emailEnviado ? 'Correo enviado correctamente' : 'El correo no pudo enviarse'}>
+                            {r.emailEnviado ? '✉️' : '⚠️'}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div>
                 <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">Tu respuesta</p>
                 <textarea
@@ -199,7 +225,6 @@ export default function AdminSupport() {
               </div>
             </div>
 
-            {/* Modal footer */}
             <div className="flex items-center gap-3 px-6 py-4 border-t border-slate-100 bg-slate-50">
               <button
                 onClick={handleReply}

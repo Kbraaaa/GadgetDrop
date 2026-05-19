@@ -53,7 +53,6 @@ export default function Success() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-white to-blue-50 px-4">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-3xl shadow-2xl border border-slate-100 p-10 text-center">
-          {/* Icon */}
           <div className="relative inline-flex mb-6">
             <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center">
               <CheckCircle className="w-12 h-12 text-green-500" />

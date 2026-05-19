@@ -1,6 +1,5 @@
 const Producto = require('../models/Producto');
 
-// Crear un nuevo producto
 const crearProducto = async (req, res) => {
     try {
         const producto = await Producto.create(req.body);
@@ -11,7 +10,6 @@ const crearProducto = async (req, res) => {
     }
 };
 
-// Obtener producto por ID
 const obtenerProductoPorId = async (req, res) => {
     try {
         const producto = await Producto.findByPk(req.params.id);
@@ -23,18 +21,16 @@ const obtenerProductoPorId = async (req, res) => {
     }
 };
 
-// Obtener todos los productos
 const obtenerProductos = async (req, res) => {
     try {
         const productos = await Producto.findAll();
-        res.json(productos); // ✅ debe devolver un array
+        res.json(productos);
     } catch (error) {
         console.error('❌ Error al obtener productos:', error);
         res.status(500).json({ error: 'Error al obtener productos' });
     }
 };
 
-// Actualizar producto
 const actualizarProducto = async (req, res) => {
     try {
         const { id } = req.params;
@@ -51,7 +47,6 @@ const actualizarProducto = async (req, res) => {
     }
 };
 
-// Eliminar producto
 const eliminarProducto = async (req, res) => {
     try {
         const { id } = req.params;

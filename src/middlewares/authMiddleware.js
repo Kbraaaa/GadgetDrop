@@ -1,4 +1,3 @@
-
 const jwt = require('jsonwebtoken');
 
 const verificarToken = (req, res, next) => {
@@ -13,9 +12,6 @@ const verificarToken = (req, res, next) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secreto');
         req.usuario = decoded;
-
-        console.log('👤 Usuario decodificado:', req.usuario);
-
         next();
     } catch (error) {
         return res.status(401).json({ mensaje: 'Token inválido o expirado' });

@@ -91,12 +91,16 @@ def main():
     ids = list(producto_usuario.index)
     similitud_df = pd.DataFrame(similitud, index=ids, columns=ids)
 
-    scores = (
+    scores_raw = (
         similitud_df[producto_id]
         .drop(labels=[producto_id])
         .sort_values(ascending=False)
         .head(5)
     )
+
+    MIN_SIMILITUD = 0.15
+    scores = scores_raw[scores_raw >= MIN_SIMILITUD]
+    pocas_recomendaciones = len(scores) < 3
 
     id_a_nombre = dict(zip(productos_df['id'], productos_df['nombre']))
     id_a_cat = dict(zip(productos_df['id'], productos_df['categoria']))
@@ -115,8 +119,10 @@ def main():
     result = {
         "productoId": producto_id,
         "nombreProducto": nombre_producto,
-        "recomendaciones": recomendaciones
+        "recomendaciones": recomendaciones,
     }
+    if pocas_recomendaciones:
+        result["advertencia"] = "Pocas recomendaciones con alta confianza para este producto"
 
     print(json.dumps(result, ensure_ascii=False))
 

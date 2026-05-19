@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ImageIcon } from 'lucide-react';
 
 const Field = ({ label, children }) => (

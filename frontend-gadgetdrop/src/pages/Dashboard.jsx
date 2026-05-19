@@ -10,14 +10,8 @@ import {
   ShoppingBag, DollarSign, TrendingUp, Package,
   Cpu, BarChart2, Activity, Zap,
 } from 'lucide-react';
+import CAT_COLORS from '../constants/categorias';
 
-const CAT_COLORS = {
-  'Gaming': '#6366f1',
-  'Workstation': '#0ea5e9',
-  'Creadores de Contenido': '#f59e0b',
-  'Accesorios Móviles': '#10b981',
-  'Wearables': '#ec4899',
-};
 const FALLBACK_COLORS = ['#6366f1', '#0ea5e9', '#f59e0b', '#10b981', '#ec4899', '#8b5cf6'];
 
 function Card({ children, className = '' }) {
@@ -58,27 +52,48 @@ export default function Dashboard() {
   useEffect(() => {
     const token = localStorage.getItem('token');
 
-    fetch(`${API_URL}/api/admin/pedidos`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then(r => r.json())
-      .then(data => setPedidos(Array.isArray(data) ? data : []))
-      .catch(() => {})
-      .finally(() => setLoadingPedidos(false));
+    (async () => {
+      try {
+        const r = await fetch(`${API_URL}/api/admin/pedidos`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!r.ok) { console.error(`Error ${r.status} en /api/admin/pedidos`); return; }
+        const data = await r.json();
+        setPedidos(Array.isArray(data) ? data : []);
+      } catch (e) {
+        console.error('Error cargando pedidos:', e);
+      } finally {
+        setLoadingPedidos(false);
+      }
+    })();
 
-    fetch(`${API_URL}/api/productos`)
-      .then(r => r.json())
-      .then(data => setProductos(Array.isArray(data) ? data : []))
-      .catch(() => {})
-      .finally(() => setLoadingProductos(false));
+    (async () => {
+      try {
+        const r = await fetch(`${API_URL}/api/productos`);
+        if (!r.ok) { console.error(`Error ${r.status} en /api/productos`); return; }
+        const data = await r.json();
+        setProductos(Array.isArray(data) ? data : []);
+      } catch (e) {
+        console.error('Error cargando productos:', e);
+      } finally {
+        setLoadingProductos(false);
+      }
+    })();
 
-    fetch(`${API_URL}/api/recomendaciones/demanda`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then(r => r.json())
-      .then(data => setDemanda(data && !data.error ? data : null))
-      .catch(() => {})
-      .finally(() => setLoadingDemanda(false));
+    (async () => {
+      try {
+        const r = await fetch(`${API_URL}/api/recomendaciones/demanda`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!r.ok) { console.error(`Error ${r.status} en /api/recomendaciones/demanda`); return; }
+        const data = await r.json();
+        setDemanda(data && !data.error ? data : null);
+      } catch (e) {
+        console.error('Error cargando demanda:', e);
+      } finally {
+        setLoadingDemanda(false);
+      }
+    })();
   }, []);
 
   // ── KPIs ────────────────────────────────────────────────────────────────────
@@ -409,7 +424,6 @@ export default function Dashboard() {
             />
 
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-              {/* Selector + explicación */}
               <div className="xl:col-span-1 space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1.5">
@@ -447,7 +461,6 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* Widget */}
               <div className="xl:col-span-2">
                 {selectedProductoId ? (
                   <RecomendacionesWidget productoId={Number(selectedProductoId)} />
@@ -503,7 +516,23 @@ export default function Dashboard() {
                           label={{ value: 'Unidades', angle: -90, position: 'insideLeft', offset: 10, style: { fontSize: 11, fill: '#94a3b8' } }}
                         />
                         <Tooltip />
-                        <Legend verticalAlign="top" />
+                        <Legend
+                          verticalAlign="top"
+                          content={() => (
+                            <div className="flex justify-center gap-5 pb-2 text-xs text-slate-600">
+                              {[
+                                { name: mesesPredichos[0], color: '#6366f1' },
+                                { name: mesesPredichos[1], color: '#8b5cf6' },
+                                { name: mesesPredichos[2], color: '#a78bfa' },
+                              ].map(item => (
+                                <span key={item.name} className="flex items-center gap-1.5">
+                                  <span className="inline-block w-3 h-3 rounded-sm" style={{ backgroundColor: item.color }} />
+                                  {item.name}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        />
                         <Bar dataKey="mes1" name={mesesPredichos[0]} fill="#6366f1" radius={[4, 4, 0, 0]} />
                         <Bar dataKey="mes2" name={mesesPredichos[1]} fill="#8b5cf6" radius={[4, 4, 0, 0]} />
                         <Bar dataKey="mes3" name={mesesPredichos[2]} fill="#a78bfa" radius={[4, 4, 0, 0]} />
@@ -528,6 +557,7 @@ export default function Dashboard() {
                             <th className="text-right px-3 py-2.5">Stock actual</th>
                             <th className="text-right px-3 py-2.5">Demanda 3 meses</th>
                             <th className="text-center px-3 py-2.5">Nivel</th>
+                            <th className="text-center px-3 py-2.5">Confianza</th>
                             <th className="text-right px-3 py-2.5 rounded-tr-lg">Días de stock</th>
                           </tr>
                         </thead>
@@ -553,6 +583,20 @@ export default function Dashboard() {
                                   ? <span className="inline-block px-2 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-700">🔴 Crítico</span>
                                   : <span className="inline-block px-2 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-700">🟡 Advertencia</span>
                                 }
+                              </td>
+                              <td className="px-3 py-2.5 text-center">
+                                {p.confianza === 'alta' && (
+                                  <span className="inline-block px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700">Alta</span>
+                                )}
+                                {p.confianza === 'media' && (
+                                  <span className="inline-block px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700">Media</span>
+                                )}
+                                {(p.confianza === 'baja' || !p.confianza) && (
+                                  <span
+                                    className="inline-block px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-500"
+                                    title="Modelo con R² < 0.2, predicción orientativa"
+                                  >Baja</span>
+                                )}
                               </td>
                               <td className="px-3 py-2.5 text-right text-slate-700">{p.dias_restock}</td>
                             </tr>

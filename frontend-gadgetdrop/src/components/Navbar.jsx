@@ -31,13 +31,11 @@ export default function Navbar() {
     <nav className="bg-slate-900 text-white shadow-lg sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
           <Link to="/" className="flex items-center gap-2 text-yellow-400 font-extrabold text-xl tracking-wide hover:text-yellow-300 transition">
             <Zap className="w-5 h-5" />
             GadgetDrop
           </Link>
 
-          {/* Desktop links */}
           <div className="hidden md:flex items-center gap-1">
             {navLinks.map(({ to, label, icon: Icon }) => (
               <Link
@@ -54,7 +52,6 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Desktop right side */}
           <div className="hidden md:flex items-center gap-2">
             {usuario ? (
               <div className="flex items-center gap-3">
@@ -92,7 +89,6 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Mobile menu button */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="md:hidden p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
@@ -102,7 +98,6 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu */}
       {mobileOpen && (
         <div className="md:hidden border-t border-slate-700/60 bg-slate-900">
           <div className="px-4 py-3 space-y-1">

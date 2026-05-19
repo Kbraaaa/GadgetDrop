@@ -38,7 +38,6 @@ export default function Registro() {
 
   return (
     <div className="min-h-screen flex bg-slate-50">
-      {/* Left panel */}
       <div className="hidden lg:flex flex-col items-center justify-center w-1/2 bg-gradient-to-br from-indigo-900 via-blue-900 to-slate-900 text-white p-10 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-indigo-400 via-transparent to-transparent" />
         <div className="relative text-center space-y-6 max-w-sm">
@@ -58,10 +57,8 @@ export default function Registro() {
         </div>
       </div>
 
-      {/* Form side */}
       <div className="flex items-center justify-center w-full lg:w-1/2 px-6 py-12">
         <div className="w-full max-w-md">
-          {/* Mobile logo */}
           <div className="flex items-center justify-center gap-2 mb-8 lg:hidden">
             <Zap className="w-6 h-6 text-yellow-500" />
             <span className="text-2xl font-extrabold text-slate-800 tracking-wide">GadgetDrop</span>

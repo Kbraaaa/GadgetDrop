@@ -10,7 +10,6 @@ const {
 const verificarToken = require('../middlewares/authMiddleware');
 const verificarAdmin = require('../middlewares/verificarAdmin');
 
-// Rutas de pedidos
 router.post('/pagado', crearPedidoDesdeStripe);
 router.post('/', crearPedido);
 router.get('/usuario/:usuarioId', verificarToken, obtenerPedidosPorUsuario);

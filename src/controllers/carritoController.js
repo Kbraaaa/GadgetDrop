@@ -1,7 +1,6 @@
 const Carrito = require('../models/Carrito');
 const Producto = require('../models/Producto');
 
-// Agregar producto al carrito
 const agregarAlCarrito = async (req, res) => {
     const { usuarioId, productoId, cantidad } = req.body;
     try {
@@ -18,12 +17,11 @@ const agregarAlCarrito = async (req, res) => {
         const nuevoItem = await Carrito.create({ usuarioId, productoId, cantidad });
         res.status(201).json({ mensaje: 'Producto agregado al carrito', carrito: nuevoItem });
     } catch (error) {
-        console.error('🔴 ERROR AL AGREGAR AL CARRITO:', error); // <--- importante
+        console.error('🔴 ERROR AL AGREGAR AL CARRITO:', error);
         res.status(500).json({ error: 'Error al agregar al carrito' });
     }
 };
 
-// Obtener el carrito de un usuario
 const obtenerCarrito = async (req, res) => {
     const { usuarioId } = req.params;
     try {
@@ -37,7 +35,6 @@ const obtenerCarrito = async (req, res) => {
     }
 };
 
-// Eliminar un producto del carrito
 const eliminarDelCarrito = async (req, res) => {
     const { id } = req.params;
     try {
@@ -47,7 +44,7 @@ const eliminarDelCarrito = async (req, res) => {
         res.status(500).json({ error: 'Error al eliminar del carrito' });
     }
 };
-// Actualizar la cantidad de un producto en el carrito
+
 const actualizarCantidad = async (req, res) => {
     const { id } = req.params;
     const { cantidad } = req.body;

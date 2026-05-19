@@ -8,7 +8,6 @@ async function crearMensaje(req, res) {
 
         const nuevo = await SupportMessage.create({ usuarioId: usuarioId || null, nombre, correo, asunto, mensaje, metadata: { ip: req.ip } });
 
-        // Enviar notificación por email al soporte
         const supportTo = process.env.SUPPORT_EMAIL || process.env.EMAIL_FROM || 'support@gadgetdrop.example';
         const subject = `[Soporte] ${asunto ? asunto : 'Nuevo mensaje de soporte'}`;
         const text = `Nuevo mensaje de soporte\n\nDe: ${nombre} <${correo}>\nAsunto: ${asunto || '-'}\n\nMensaje:\n${mensaje}\n\nId interno: ${nuevo.id}`;
@@ -27,4 +26,34 @@ async function crearMensaje(req, res) {
     }
 }
 
-module.exports = { crearMensaje };
+async function getMisTickets(req, res) {
+    try {
+        const usuarioId = req.usuario.id;
+        const mensajes = await SupportMessage.findAll({
+            where: { usuarioId },
+            order: [['createdAt', 'DESC']],
+        });
+        const tickets = mensajes.map(m => {
+            const meta = m.metadata || {};
+            const replies = (meta.replies || []).map(r => ({
+                text: r.text,
+                at: r.at,
+                emailEnviado: r.emailEnviado,
+            }));
+            return {
+                id: m.id,
+                asunto: m.asunto,
+                mensaje: m.mensaje,
+                status: m.status,
+                createdAt: m.createdAt,
+                replies,
+            };
+        });
+        res.json({ tickets });
+    } catch (error) {
+        console.error('Error obteniendo mis tickets:', error);
+        res.status(500).json({ error: 'Error del servidor' });
+    }
+}
+
+module.exports = { crearMensaje, getMisTickets };

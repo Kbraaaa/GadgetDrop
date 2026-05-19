@@ -6,6 +6,27 @@ const Usuario = require('../models/Usuario');
 const mailer = require('../utils/mailer');
 const sequelize = require('../config/db');
 
+const WINDOW_SECONDS = 120;
+
+const normalizeCarrito = items =>
+    items
+        .map(it => ({ productoId: it.Producto?.id || it.productoId, cantidad: Number(it.cantidad), precioUnitario: Number(it.Producto?.precio ?? it.precioUnitario) }))
+        .sort((a, b) => a.productoId - b.productoId);
+
+const isSameDetalles = (car, detalles) => {
+    const detNorm = (detalles || [])
+        .map(d => ({ productoId: d.productoId, cantidad: Number(d.cantidad), precioUnitario: Number(d.precioUnitario) }))
+        .sort((a, b) => a.productoId - b.productoId);
+    if (car.length !== detNorm.length) return false;
+    for (let i = 0; i < car.length; i++) {
+        if (car[i].productoId !== detNorm[i].productoId) return false;
+        if (Number(car[i].cantidad) !== Number(detNorm[i].cantidad)) return false;
+        // allow small float diffs in price
+        if (Math.abs(Number(car[i].precioUnitario) - Number(detNorm[i].precioUnitario)) > 0.01) return false;
+    }
+    return true;
+};
+
 const crearPedido = async (req, res) => {
     const { usuarioId, externalId } = req.body;
 
@@ -34,15 +55,8 @@ const crearPedido = async (req, res) => {
             if (existente) return res.json({ mensaje: 'Pedido ya registrado', pedidoId: existente.id });
         }
 
-        const normalizeCarrito = items => {
-            return items
-                .map(it => ({ productoId: it.Producto?.id || it.productoId, cantidad: Number(it.cantidad), precioUnitario: Number(it.Producto?.precio ?? it.precioUnitario) }))
-                .sort((a, b) => a.productoId - b.productoId);
-        };
-
-        const carritoNorm = normalizeCarrito(carrito || []);
+        const carritoNorm = normalizeCarrito(carrito);
         const now = new Date();
-        const WINDOW_SECONDS = 120;
 
         const recientes = await Pedido.findAll({
             where: { usuarioId },
@@ -50,17 +64,6 @@ const crearPedido = async (req, res) => {
             order: [['createdAt', 'DESC']],
             limit: 10
         });
-
-        const isSameDetalles = (car, detalles) => {
-            const detNorm = (detalles || []).map(d => ({ productoId: d.productoId, cantidad: Number(d.cantidad), precioUnitario: Number(d.precioUnitario) })).sort((a, b) => a.productoId - b.productoId);
-            if (car.length !== detNorm.length) return false;
-            for (let i = 0; i < car.length; i++) {
-                if (car[i].productoId !== detNorm[i].productoId) return false;
-                if (Number(car[i].cantidad) !== Number(detNorm[i].cantidad)) return false;
-                if (Math.abs(Number(car[i].precioUnitario) - Number(detNorm[i].precioUnitario)) > 0.01) return false;
-            }
-            return true;
-        };
 
         for (const ped of recientes) {
             const ageSeconds = (now - new Date(ped.createdAt)) / 1000;
@@ -141,15 +144,8 @@ const crearPedidoDesdeStripe = async (req, res) => {
     const { usuarioId, carrito, externalId } = req.body;
 
     try {
-        const normalizeCarrito = items => {
-            return items
-                .map(it => ({ productoId: it.Producto?.id || it.productoId, cantidad: Number(it.cantidad), precioUnitario: Number(it.Producto?.precio ?? it.precioUnitario) }))
-                .sort((a, b) => a.productoId - b.productoId);
-        };
-
         const carritoNorm = normalizeCarrito(carrito || []);
         const now = new Date();
-        const WINDOW_SECONDS = 120;
 
         const recientes = await Pedido.findAll({
             where: { usuarioId },
@@ -157,18 +153,6 @@ const crearPedidoDesdeStripe = async (req, res) => {
             order: [['createdAt', 'DESC']],
             limit: 10
         });
-
-        const isSameDetalles = (car, detalles) => {
-            const detNorm = (detalles || []).map(d => ({ productoId: d.productoId, cantidad: Number(d.cantidad), precioUnitario: Number(d.precioUnitario) })).sort((a, b) => a.productoId - b.productoId);
-            if (car.length !== detNorm.length) return false;
-            for (let i = 0; i < car.length; i++) {
-                if (car[i].productoId !== detNorm[i].productoId) return false;
-                if (Number(car[i].cantidad) !== Number(detNorm[i].cantidad)) return false;
-                // allow small float diffs in price
-                if (Math.abs(Number(car[i].precioUnitario) - Number(detNorm[i].precioUnitario)) > 0.01) return false;
-            }
-            return true;
-        };
 
         for (const ped of recientes) {
             const ageSeconds = (now - new Date(ped.createdAt)) / 1000;
@@ -180,6 +164,7 @@ const crearPedidoDesdeStripe = async (req, res) => {
                 break;
             }
         }
+
         if (externalId) {
             const existente = await Pedido.findOne({ where: { externalId } });
             if (existente) return res.json({ mensaje: 'Pedido ya registrado', pedidoId: existente.id });
@@ -238,7 +223,6 @@ const crearPedidoDesdeStripe = async (req, res) => {
         ;(async () => {
             try {
                 const usuario = await Usuario.findByPk(usuarioId);
-                console.log('=== Intentando enviar correo a:', usuario?.correo);
                 if (usuario && usuario.correo) {
                     const fecha = new Date(nuevoPedido.createdAt || Date.now())
                         .toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -292,7 +276,6 @@ const obtenerPedidosPorUsuario = async (req, res) => {
     }
 };
 
-// Actualizar estado del pedido
 const actualizarEstadoPedido = async (req, res) => {
     try {
         const { id } = req.params;
@@ -308,10 +291,9 @@ const actualizarEstadoPedido = async (req, res) => {
 
         res.json({ mensaje: 'Estado del pedido actualizado correctamente', pedido });
     } catch (err) {
-        console.error("❌ ERROR en crearPedidoDesdeStripe:", err);
+        console.error('❌ Error al actualizar estado del pedido:', err);
         res.status(500).json({ error: err.message || 'Error al guardar pedido' });
     }
-
 };
 
 module.exports = {

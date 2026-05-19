@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { useToast } from '../components/Toast';
 import { API_URL } from '../config';
-import { ShoppingCart, Zap, Package, Star } from 'lucide-react';
+import { ShoppingCart, Zap, Package } from 'lucide-react';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -57,7 +57,6 @@ export default function Home() {
     <>
       <Navbar />
 
-      {/* Hero */}
       <header className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-400 via-transparent to-transparent" />
         <div className="relative max-w-5xl mx-auto px-6 py-20 sm:py-28 text-center">
@@ -75,7 +74,6 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Products */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
         <div className="flex items-center justify-between mb-8">
           <div>

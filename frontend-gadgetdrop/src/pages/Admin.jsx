@@ -42,7 +42,6 @@ export default function Admin() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
-      {/* Sidebar overlay (mobile) */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 z-40 bg-black/50 lg:hidden"
@@ -50,11 +49,9 @@ export default function Admin() {
         />
       )}
 
-      {/* Sidebar */}
       <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 text-white flex flex-col transition-transform duration-300 ease-in-out
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:relative lg:translate-x-0 lg:flex`}>
 
-        {/* Logo */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-700/60">
           <Link to="/" className="text-yellow-400 font-extrabold text-xl tracking-wide">
             GadgetDrop
@@ -67,7 +64,6 @@ export default function Admin() {
           </button>
         </div>
 
-        {/* User info */}
         <div className="px-5 py-4 border-b border-slate-700/60">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-base shadow">
@@ -82,7 +78,6 @@ export default function Admin() {
           </div>
         </div>
 
-        {/* Navigation */}
         <nav className="flex-1 px-3 py-5 space-y-1 overflow-y-auto">
           {tabs.map(t => {
             const Icon = t.icon;
@@ -107,7 +102,6 @@ export default function Admin() {
           })}
         </nav>
 
-        {/* Back to site */}
         <div className="px-4 py-4 border-t border-slate-700/60">
           <Link
             to="/"
@@ -119,9 +113,7 @@ export default function Admin() {
         </div>
       </aside>
 
-      {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Top bar */}
         <header className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3 flex items-center gap-3 sticky top-0 z-30 shadow-sm">
           <button
             onClick={() => setSidebarOpen(true)}
@@ -143,7 +135,6 @@ export default function Admin() {
           </div>
         </header>
 
-        {/* Page content */}
         <main className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto">
           {tab === 'productos' && <AdminProducts />}
           {tab === 'pedidos' && <AdminOrders />}

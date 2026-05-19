@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { API_URL } from '../config';
 import { ShoppingBag, AlertTriangle, X, ChevronDown, ChevronUp, Package } from 'lucide-react';
 
@@ -57,7 +57,6 @@ export default function AdminOrders() {
 
   const toggleExpand = (id) => setExpanded(prev => ({ ...prev, [id]: !prev[id] }));
 
-  // Stats
   const stats = {
     total: pedidos.length,
     pendiente: pedidos.filter(p => p.estado === 'pendiente').length,
@@ -67,13 +66,11 @@ export default function AdminOrders() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div>
         <h2 className="text-xl font-bold text-slate-800">Gestión de pedidos</h2>
         <p className="text-sm text-slate-500 mt-0.5">Actualiza el estado de cada pedido</p>
       </div>
 
-      {/* Stats row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
           { label: 'Total', value: stats.total, color: 'text-slate-700', bg: 'bg-slate-50 border-slate-200' },
@@ -96,7 +93,6 @@ export default function AdminOrders() {
         </div>
       )}
 
-      {/* Orders list */}
       {loading ? (
         <div className="space-y-3">
           {[...Array(4)].map((_, i) => (
@@ -125,7 +121,6 @@ export default function AdminOrders() {
             const estado = p.estado || 'pendiente';
             return (
               <div key={p.id} className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                {/* Order header */}
                 <div className="p-4 sm:p-5">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <div className="flex items-start gap-3">
@@ -172,7 +167,6 @@ export default function AdminOrders() {
                   </div>
                 </div>
 
-                {/* Expandable details */}
                 {isExpanded && detalles.length > 0 && (
                   <div className="border-t border-slate-100 bg-slate-50 px-5 py-4">
                     <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">

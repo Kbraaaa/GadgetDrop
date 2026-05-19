@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ProductForm from './ProductForm';
 import { API_URL } from '../config';
 import { Search, Plus, X, Package, AlertTriangle, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -87,7 +87,6 @@ export default function AdminProducts() {
 
   return (
     <div className="space-y-6">
-      {/* Header row */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold text-slate-800">Catálogo de productos</h2>
@@ -110,7 +109,6 @@ export default function AdminProducts() {
         </div>
       )}
 
-      {/* Create form modal */}
       {showCreateForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="fixed inset-0 bg-black/40" onClick={() => setShowCreateForm(false)} />
@@ -126,7 +124,6 @@ export default function AdminProducts() {
         </div>
       )}
 
-      {/* Edit modal */}
       {editing && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="fixed inset-0 bg-black/40" onClick={() => setEditing(null)} />
@@ -145,7 +142,6 @@ export default function AdminProducts() {
         </div>
       )}
 
-      {/* Search & filter bar */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -173,7 +169,6 @@ export default function AdminProducts() {
         </select>
       </div>
 
-      {/* Product grid */}
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {[...Array(6)].map((_, i) => (
@@ -243,7 +238,6 @@ export default function AdminProducts() {
             })}
           </div>
 
-          {/* Pagination */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
             <p className="text-sm text-slate-500">
               Mostrando <span className="font-medium text-slate-700">{start + 1}–{Math.min(start + pageSize, total)}</span> de <span className="font-medium text-slate-700">{total}</span> resultados
