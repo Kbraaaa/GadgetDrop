@@ -201,6 +201,7 @@ export default function Dashboard() {
                   Módulo de Ciencia de Datos
                 </p>
               </div>
+
             </div>
           </div>
         </div>

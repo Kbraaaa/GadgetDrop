@@ -4,3 +4,6 @@ coverage/
 .DS_Store
 dist/
 frontend-gadgetdrop/node_modules/
+*.log
+.claude/
+data_science/.ipynb_checkpoints/

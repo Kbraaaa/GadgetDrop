@@ -40,33 +40,26 @@ const patrones = [
 // ── Usuarios por segmento ────────────────────────────────────────────────────
 
 const todosLosUsuarios = [
-    // Frecuentes
-    { id: 1,  pedidos: 9  },
-    { id: 3,  pedidos: 10 },
-    { id: 4,  pedidos: 8  },
-    { id: 8,  pedidos: 9  },
-    { id: 9,  pedidos: 8  },
-    { id: 16, pedidos: 8  },
-    { id: 23, pedidos: 9  },
-    { id: 27, pedidos: 10 },
-    // Medios
-    { id: 2,  pedidos: 4 },
-    { id: 5,  pedidos: 3 },
-    { id: 6,  pedidos: 5 },
-    { id: 12, pedidos: 4 },
-    { id: 13, pedidos: 3 },
-    { id: 18, pedidos: 4 },
-    { id: 20, pedidos: 5 },
-    { id: 21, pedidos: 3 },
-    // Esporádicos
+    // Usuarios nuevos IDs 74-83 — 5 pedidos cada uno
+    { id: 74, pedidos: 5 },
+    { id: 75, pedidos: 5 },
+    { id: 76, pedidos: 5 },
+    { id: 77, pedidos: 5 },
+    { id: 78, pedidos: 5 },
+    { id: 79, pedidos: 5 },
+    { id: 80, pedidos: 5 },
+    { id: 81, pedidos: 5 },
+    { id: 82, pedidos: 5 },
+    { id: 83, pedidos: 5 },
+    // Usuarios esporádicos — 2 pedidos más con fechas antiguas
     { id: 7,  pedidos: 2 },
-    { id: 10, pedidos: 1 },
+    { id: 10, pedidos: 2 },
     { id: 11, pedidos: 2 },
-    { id: 14, pedidos: 1 },
+    { id: 14, pedidos: 2 },
     { id: 15, pedidos: 2 },
-    { id: 19, pedidos: 1 },
+    { id: 19, pedidos: 2 },
     { id: 28, pedidos: 2 },
-    { id: 29, pedidos: 1 },
+    { id: 29, pedidos: 2 },
 ];
 
 // ── Distribuciones de estado ─────────────────────────────────────────────────
@@ -94,13 +87,26 @@ function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// Distribución sesgada hacia fechas recientes (raíz cuadrada del número aleatorio)
-function randomFechaReciente() {
-    const ahora = Date.now();
-    const hace6meses = ahora - 180 * 24 * 60 * 60 * 1000;
-    const rango = ahora - hace6meses;
-    const t = Math.pow(Math.random(), 0.6); // sesgo hacia fechas recientes
-    return new Date(hace6meses + t * rango);
+// 30% entre 5-6 meses | 35% entre 6-7 meses | 35% entre 7-8 meses
+function fechaAleatoria() {
+    const ahora = new Date();
+    const rand = Math.random();
+    let diasAtras;
+
+    if (rand < 0.30) {
+        // Entre 5 y 6 meses atrás
+        diasAtras = Math.floor(Math.random() * 30) + 150;
+    } else if (rand < 0.65) {
+        // Entre 6 y 7 meses atrás
+        diasAtras = Math.floor(Math.random() * 30) + 180;
+    } else {
+        // Entre 7 y 8 meses atrás
+        diasAtras = Math.floor(Math.random() * 30) + 210;
+    }
+
+    const fecha = new Date(ahora);
+    fecha.setDate(fecha.getDate() - diasAtras);
+    return fecha;
 }
 
 // ── Main ─────────────────────────────────────────────────────────────────────
@@ -156,8 +162,8 @@ async function run() {
                 // 6. Estado ponderado
                 const { estado } = seleccionarPonderado(estadosDistribucion);
 
-                // 7. Fecha aleatoria sesgada hacia reciente
-                const fecha = randomFechaReciente();
+                // 7. Fecha con distribución natural (40/35/25 por franjas)
+                const fecha = fechaAleatoria();
                 fechasGeneradas.push(fecha);
 
                 // Crear pedido dentro de transacción
@@ -217,6 +223,72 @@ async function run() {
     }
     console.log(`\n--- Rango de fechas generado ---`);
     console.log(`  ${fechaMin}  →  ${fechaMax}`);
+
+    // Distribución por mes de los pedidos recién creados
+    const conteoPorMes = new Map();
+    for (const f of fechasGeneradas) {
+        const clave = `${f.getFullYear()}-${String(f.getMonth() + 1).padStart(2, '0')}`;
+        conteoPorMes.set(clave, (conteoPorMes.get(clave) ?? 0) + 1);
+    }
+    const mesesOrdenados = [...conteoPorMes.entries()].sort(([a], [b]) => a.localeCompare(b));
+
+    console.log('\n--- Distribución por mes (pedidos nuevos) ---');
+    for (const [mes, count] of mesesOrdenados) {
+        const barra = '█'.repeat(Math.round(count / 2));
+        console.log(`  ${mes}  ${String(count).padStart(4)}  ${barra}`);
+    }
+
+    const [[{ total: totalPedidosDB }]] = await sequelize.query('SELECT COUNT(*) AS total FROM pedidos');
+    const [[{ total: totalDetallesDB }]] = await sequelize.query('SELECT COUNT(*) AS total FROM "detalle_pedidos"');
+    console.log('\n--- Totales acumulados en BD ---');
+    console.log(`  pedidos        : ${totalPedidosDB}`);
+    console.log(`  detalle_pedidos: ${totalDetallesDB}`);
+
+    // Distribución por mes de TODOS los pedidos en BD
+    const [todosPedidosDB] = await sequelize.query(
+        'SELECT "createdAt" FROM pedidos ORDER BY "createdAt" ASC'
+    );
+    const conteoPorMesTodo = new Map();
+    for (const row of todosPedidosDB) {
+        const f = new Date(row.createdAt);
+        const clave = `${f.getFullYear()}-${String(f.getMonth() + 1).padStart(2, '0')}`;
+        conteoPorMesTodo.set(clave, (conteoPorMesTodo.get(clave) ?? 0) + 1);
+    }
+    const mesesTodoOrdenados = [...conteoPorMesTodo.entries()].sort(([a], [b]) => a.localeCompare(b));
+    const maxCount = Math.max(...mesesTodoOrdenados.map(([, c]) => c));
+
+    console.log('\n--- Distribución por mes — TODOS los pedidos en BD ---');
+    for (const [mes, count] of mesesTodoOrdenados) {
+        const barLen = Math.round((count / maxCount) * 30);
+        const barra = '█'.repeat(barLen);
+        console.log(`  ${mes}  ${String(count).padStart(4)}  ${barra}`);
+    }
+
+    // Productos con historial de 8+ meses (>= 240 días)
+    const umbral8meses = new Date();
+    umbral8meses.setDate(umbral8meses.getDate() - 240);
+    const [prodHistorial] = await sequelize.query(`
+        SELECT dp."productoId", MIN(p."createdAt") AS primera_compra
+        FROM "detalle_pedidos" dp
+        JOIN pedidos p ON p.id = dp."pedidoId"
+        GROUP BY dp."productoId"
+        HAVING MIN(p."createdAt") <= :umbral
+        ORDER BY primera_compra ASC
+    `, { replacements: { umbral: umbral8meses.toISOString() } });
+
+    console.log(`\n--- Productos con 8+ meses de historial (${prodHistorial.length}) ---`);
+    if (prodHistorial.length > 0) {
+        const ids8m = prodHistorial.map(r => r.productoId);
+        const prods8m = await Producto.findAll({ where: { id: ids8m }, attributes: ['id', 'nombre'] });
+        const nom8m = new Map(prods8m.map(p => [p.id, p.nombre]));
+        for (const r of prodHistorial) {
+            const fecha8 = new Date(r.primera_compra).toISOString().slice(0, 10);
+            console.log(`  [${String(r.productoId).padStart(3)}] ${(nom8m.get(r.productoId) ?? '?').padEnd(35)} primera compra: ${fecha8}`);
+        }
+    } else {
+        console.log('  (ninguno alcanza los 8 meses aún)');
+    }
+
     console.log('==========================================\n');
 
     process.exit(0);

@@ -29,7 +29,13 @@ export default function AdminOrders() {
       const res = await fetch(`${API_URL}/api/admin/pedidos`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      if (!res.ok) throw new Error('No autorizado o error');
+      if (res.status === 401 || res.status === 403) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuario');
+        window.location.href = '/login';
+        return;
+      }
+      if (!res.ok) throw new Error('Error al cargar pedidos');
       const data = await res.json();
       setPedidos(data || []);
     } catch (err) {
@@ -48,6 +54,12 @@ export default function AdminOrders() {
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ estado })
       });
+      if (res.status === 401 || res.status === 403) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuario');
+        window.location.href = '/login';
+        return;
+      }
       if (!res.ok) throw new Error('Error cambiando estado');
       fetchPedidos();
     } catch (err) {
